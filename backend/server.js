@@ -14,6 +14,12 @@ app.use(express.json());
 // Connect Database
 connectDB();
 
+// Routes
+app.use('/api/tutors', require('./routes/tutors'));
+app.use('/api/bookings', require('./routes/bookings'));
+app.use('/api/auth', require('./routes/auth'));
+
+
 // Test route
 app.get('/', (req, res) => {
   res.json({ message: 'SkillSync API is running!' });
