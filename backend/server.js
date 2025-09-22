@@ -1,4 +1,5 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
@@ -18,13 +19,26 @@ initSocket(server);
 app.use(cors());
 app.use(express.json());
 
+// Serve static files from frontend directory
+app.use(express.static(path.join(__dirname, '../frontend')));
+
 // Routes
 app.use('/api/tutors', require('./routes/tutors'));
 app.use('/api/bookings', require('./routes/bookings'));
 app.use('/api/auth', require('./routes/auth'));
 
-// Test route
+// Dashboard route
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dashboard.html'));
+});
+
+// Default route for frontend
 app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/login.html'));
+});
+
+// API test route
+app.get('/api', (req, res) => {
   res.json({ message: 'SkillSync API is running!' });
 });
 
