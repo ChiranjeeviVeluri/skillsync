@@ -1,0 +1,363 @@
+/* Signup Page CSS - Coursera Color Palette */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-blue: #0056D3;
+    --secondary-blue: #0D47A1;
+    --light-blue: #E3F2FD;
+    --success-green: #00C851;
+    --warning-orange: #FF6F00;
+    --gray-text: #333333;
+    --light-gray: #F5F5F5;
+    --white: #FFFFFF;
+    --border-gray: #E0E0E0;
+    --hover-blue: #0041A3;
+    --error-red: #D32F2F;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--light-blue) 0%, var(--white) 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.signup-card {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 86, 211, 0.1);
+    overflow: hidden;
+    border: 1px solid var(--border-gray);
+    margin: 20px 0;
+}
+
+.logo {
+    background: var(--primary-blue);
+    color: var(--white);
+    text-align: center;
+    padding: 25px 20px;
+}
+
+.logo h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.logo p {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.signup-form-container {
+    padding: 30px;
+}
+
+.signup-form-container h2 {
+    color: var(--gray-text);
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.subtitle {
+    color: #666;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 0.9rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label,
+.section-label {
+    display: block;
+    color: var(--gray-text);
+    font-weight: 500;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid var(--border-gray);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: var(--white);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    background-color: var(--light-blue);
+}
+
+.form-group input::placeholder {
+    color: #999;
+}
+
+.error-message {
+    color: var(--error-red);
+    font-size: 0.8rem;
+    margin-top: 5px;
+    display: block;
+}
+
+/* Role Selection */
+.role-selection {
+    margin: 25px 0;
+}
+
+.role-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.role-option {
+    position: relative;
+}
+
+.role-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+}
+
+.role-card {
+    display: block;
+    border: 2px solid var(--border-gray);
+    border-radius: 8px;
+    padding: 20px 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: var(--white);
+}
+
+.role-card:hover {
+    border-color: var(--primary-blue);
+    background-color: var(--light-blue);
+}
+
+.role-option input[type="radio"]:checked + .role-card {
+    border-color: var(--primary-blue);
+    background-color: var(--light-blue);
+    box-shadow: 0 4px 12px rgba(0, 86, 211, 0.2);
+}
+
+.role-icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.role-info h3 {
+    color: var(--gray-text);
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+
+.role-info p {
+    color: #666;
+    font-size: 0.85rem;
+}
+
+/* Tutor Subjects */
+.tutor-subjects {
+    margin: 20px 0;
+    padding: 20px;
+    background: var(--light-gray);
+    border-radius: 8px;
+    border: 1px solid var(--border-gray);
+}
+
+.subjects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.subject-checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+}
+
+.subject-checkbox:hover {
+    background-color: var(--white);
+}
+
+.subject-checkbox input[type="checkbox"] {
+    margin-right: 8px;
+    width: auto;
+}
+
+.checkbox-custom {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border-gray);
+    border-radius: 3px;
+    margin-right: 8px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.subject-checkbox input[type="checkbox"]:checked + .checkbox-custom {
+    background-color: var(--primary-blue);
+    border-color: var(--primary-blue);
+}
+
+.subject-checkbox input[type="checkbox"]:checked + .checkbox-custom::after {
+    content: '✓';
+    position: absolute;
+    color: white;
+    font-size: 12px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Checkbox Group */
+.checkbox-group {
+    margin: 25px 0;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: flex-start;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--gray-text);
+    line-height: 1.4;
+}
+
+.checkbox-container input[type="checkbox"] {
+    margin-right: 8px;
+    margin-top: 2px;
+    width: auto;
+}
+
+.link {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
+.btn-signup {
+    width: 100%;
+    background: var(--primary-blue);
+    color: var(--white);
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 20px 0;
+}
+
+.btn-signup:hover {
+    background: var(--hover-blue);
+    transform: translateY(-1px);
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-gray);
+}
+
+.login-link p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.login-link a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        max-width: 100%;
+        margin: 0 10px;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+    
+    .role-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .subjects-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .signup-form-container {
+        padding: 25px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo {
+        padding: 20px 15px;
+    }
+    
+    .logo h1 {
+        font-size: 1.5rem;
+    }
+    
+    .signup-form-container {
+        padding: 20px 15px;
+    }
+    
+    .role-card {
+        padding: 15px 10px;
+    }
+    
+    .role-icon {
+        font-size: 1.5rem;
+    }
+}

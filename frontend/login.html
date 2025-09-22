@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SkillSync</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="container">
+        <div class="login-card">
+            <div class="logo">
+                <h1>SkillSync</h1>
+                <p>Peer Tutoring Platform</p>
+            </div>
+            
+            <div class="login-form-container">
+                <h2>Welcome Back</h2>
+                <p class="subtitle">Sign in to your account</p>
+                
+                <form class="login-form" id="loginForm">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your university email" required>
+                        <span class="error-message" id="emailError"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                        <span class="error-message" id="passwordError"></span>
+                    </div>
+                    
+                    <div class="form-options">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="remember">
+                            <span class="checkmark"></span>
+                            Remember me
+                        </label>
+                        <a href="#" class="forgot-password">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" class="btn-login">Sign In</button>
+                </form>
+                
+                <div class="divider">
+                    <span>or</span>
+                </div>
+                
+                <div class="test-accounts">
+                    <p>Quick test access:</p>
+                    <div class="test-buttons">
+                        <button type="button" class="btn-test" onclick="fillTestAccount('learner')">Demo Learner</button>
+                        <button type="button" class="btn-test" onclick="fillTestAccount('tutor')">Demo Tutor</button>
+                    </div>
+                </div>
+                
+                <div class="signup-link">
+                    <p>Don't have an account? <a href="signup.html">Sign up here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function fillTestAccount(type) {
+            if (type === 'learner') {
+                document.getElementById('email').value = 'learner@university.edu';
+                document.getElementById('password').value = 'password123';
+            } else if (type === 'tutor') {
+                document.getElementById('email').value = 'tutor@university.edu';
+                document.getElementById('password').value = 'password123';
+            }
+        }
+        
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // This will be connected to backend later
+            alert('Login functionality will be connected to backend');
+            window.location.href = 'dashboard.html';
+        });
+    </script>
+</body>
+</html>

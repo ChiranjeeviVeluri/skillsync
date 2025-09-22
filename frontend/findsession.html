@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Sessions - SkillSync</title>
+    <link rel="stylesheet" href="findsession.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>SkillSync</h2>
+            </div>
+            <div class="nav-user">
+                <div class="user-info">
+                    <span class="user-name">John Doe</span>
+                    <span class="user-role">Learner</span>
+                </div>
+                <div class="nav-actions">
+                    <button class="btn-notifications">
+                        <span class="notification-icon">🔔</span>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <button class="btn-logout" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="dashboard.html" class="nav-link">
+                            <span class="nav-icon">📊</span>
+                            <span class="nav-text">Overview</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="findtutor.html" class="nav-link">
+                            <span class="nav-icon">🔍</span>
+                            <span class="nav-text">Find Tutors</span>
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a href="findsession.html" class="nav-link">
+                            <span class="nav-icon">📅</span>
+                            <span class="nav-text">My Sessions</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="profile.html" class="nav-link">
+                            <span class="nav-icon">👤</span>
+                            <span class="nav-text">Profile</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>My Sessions</h1>
+                <p>Manage your upcoming and past tutoring sessions</p>
+            </div>
+
+            <!-- Session Stats -->
+            <div class="session-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-info">
+                        <h3>3</h3>
+                        <p>Upcoming Sessions</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <h3>12</h3>
+                        <p>Completed Sessions</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-info">
+                        <h3>4.8</h3>
+                        <p>Average Rating Given</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🕐</div>
+                    <div class="stat-info">
+                        <h3>24</h3>
+                        <p>Total Hours</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Session Tabs -->
+            <div class="sessions-tabs">
+                <button class="tab-btn active" onclick="showTab('upcoming')">
+                    <span class="tab-icon">📅</span>
+                    Upcoming (3)
+                </button>
+                <button class="tab-btn" onclick="showTab('completed')">
+                    <span class="tab-icon">✅</span>
+                    Completed (12)
+                </button>
+                <button class="tab-btn" onclick="showTab('cancelled')">
+                    <span class="tab-icon">❌</span>
+                    Cancelled (1)
+                </button>
+            </div>
+
+            <!-- Upcoming Sessions -->
+            <div id="upcoming-sessions" class="sessions-content active">
+                <div class="sessions-header">
+                    <h2>Upcoming Sessions</h2>
+                    <button class="btn-book-new" onclick="window.location.href='findtutor.html'">
+                        <span>➕</span> Book New Session
+                    </button>
+                </div>
+
+                <div class="sessions-list">
+                    <div class="session-card urgent">
+                        <div class="session-time-badge">Tomorrow</div>
+                        <div class="session-main">
+                            <div class="session-header">
+                                <div class="session-subject">Mathematics</div>
+                                <div class="session-status status-confirmed">Confirmed</div>
+                            </div>
+                            <h3>Session with Sarah Johnson</h3>
+                            <div class="session-details">
+                                <div class="detail-item">
+                                    <span class="icon">📅</span>
+                                    <span>Tomorrow, March 15, 2024</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="icon">⏰</span>
+                                    <span>2:00 PM - 3:00 PM</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="icon">📍</span>
+                                    <span>Library Room 201</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="icon">👩‍🎓</span>
+                                    <span>Sarah Johnson - 4.9⭐ (23 reviews)</span>
+                                </div>
+                            </div>
+                            <div class="session-topics">
+                                <span class="topic-tag">Calculus</span>
+                                <span class="topic-tag">Derivatives</span>
+                            </div>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn-message" onclick="messagesTutor('sarah-johnson')">
+                                <span>💬</span> Message
+                            </button>
+                            <button class="btn-reschedule" onclick="rescheduleSession('session-1')">
+                                <span>📅</span> Reschedule
+                            </button>
+                            <button class="btn-cancel" onclick="cancelSession('session-1')">
+                                <span>❌</span> Cancel
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="session-card">
+                        <div class="session-time-badge">Friday</div>
+                        <div class="session-main">
+                            <div class="session-header">
+                                <div class="session-subject">Physics</div>
+                                <div class="session-status status-pending">Pending</div>
+                            </div>
+                            <h3>Session with Mike Chen</h3>
+                            <div class="session-details">
+                                <div class="detail-item">
+                                    <span class="icon">📅</span>
+                                    <span>Friday, March 17, 2024</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="icon">⏰</span>
+                                    <span>4:00 PM - 5:30 PM</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="icon">📍</span>
+                                    <span>Online (Zoom)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="icon">👨‍💻</span>
+                                    <span>Mike Chen - 4.8⭐ (31 reviews)</span>
+                                </div>
+                            </div>
+                            <div class="session-topics">
+                                <span class="topic-tag">Quantum Mechanics</span>
+                                <span class="topic-tag">Wave Functions</span>
+                            </div>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn-message" onclick="messagesTutor('mike-chen')">
+                                <span>💬</span> Message
+                            </button>
+                            <button class="btn-reschedule" onclick="rescheduleSession('session-2')">
+                                <span>📅</span> Reschedule
+                            </button>
+                            <button class="btn-cancel" onclick="cancelSession('session-2')">
+                                <span>❌</span> Cancel
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="session-card">
+                        <div class="session-time-badge">Next Week</div>
+                        <div class="session-main">
+                            <div class="session-header">
+                                <div class="session-subject">Chemistry</div>
+                                <div class="session-status status-confirmed">Confirmed</div>
+                            </div>
+                            <h3>Session with Emma Davis</h3>
+                            <div class="session-details">
+                                <div class="detail-item">
+                                    <span class="icon">📅</span>
+                                    <span>Monday, March 20, 2024</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="icon">⏰</span>
+                                    <span>3:00 PM - 5:00 PM</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="icon">📍</span>
+                                    <span>Science Building Lab 3</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="icon">👩‍🔬</span>
+                                    <span>Emma Davis - 4.7⭐ (18 reviews)</span>
+                                </div>
+                            </div>
+                            <div class="session-topics">
+                                <span class="topic-tag">Organic Chemistry</span>
+                                <span class="topic-tag">Exam Prep</span>
+                            </div>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn-message" onclick="messagesTutor('emma-davis')">
+                                <span>💬</span> Message
+                            </button>
+                            <button class="btn-reschedule" onclick="rescheduleSession('session-3')">
+                                <span>📅</span> Reschedule
+                            </button>
+                            <button class="btn-cancel" onclick="cancelSession('session-3')">
+                                <span>❌</span> Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completed Sessions -->
+            <div id="completed-sessions" class="sessions-content">
+                <div class="sessions-header">
+                    <h2>Completed Sessions</h2>
+                    <div class="filter-options">
+                        <select id="monthFilter" onchange="filterCompleted()">
+                            <option value="">All Time</option>
+                            <option value="march">March 2024</option>
+                            <option value="february">February 2024</option>
+                            <option value="january">January 2024</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="sessions-list">
+                    <div class="session-card completed">
+                        <div class="session-time-badge past">Last Week</div>
+                        <div class="session-main">
+                            <div class="session-header">
+                                <div class="session-subject">Chemistry</div>
+                                <div class="session-rating">
+                                    <span>Your Rating:</span>
+                                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                                </div>
+                            </div>
+                            <h3>Session with Emma Davis</h3>
+                            <div class="session-details">
+                                <div class="detail-item">
+                                    <span class="icon">📅</span>
+                                    <span>Monday, March 6, 2024</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="icon">⏰</span>
+                                    <span>3:00 PM - 5:00 PM (2 hours)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="icon">💰</span>
+                                    <span>$56.00 total</span>
+                                </div>
+                            </div>
+                            <div class="session-notes">
+                                <p><strong>Your notes:</strong> Great session! Emma explained organic chemistry concepts clearly. Finally understand reaction mechanisms.</p>
+                            </div>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn-book-again" onclick="bookAgain('emma-davis')">
+                                <span>🔄</span> Book Again
+                            </button>
+                            <button class="btn-view-details" onclick="viewSessionDetails('session-completed-1')">
+                                <span>📋</span> Details
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="session-card completed">
+                        <div class="session-time-badge past">2 Weeks Ago</div>
+                        <div class="session-main">
+                            <div class="session-header">
+                                <div class="session-subject">Mathematics</div>
+                                <div class="session-rating">
+                                    <span>Your Rating:</span>
+                                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                                </div>
+                            </div>
+                            <h3>Session with Sarah Johnson</h3>
+                            <div class="session-details">
+                                <div class="detail-item">
+                                    <span class="icon">📅</span>
+                                    <span>Friday, February 25, 2024</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="icon">⏰</span>
+                                    <span>2:00 PM - 3:00 PM (1 hour)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="icon">💰</span>
+                                    <span>$25.00 total</span>
+                                </div>
+                            </div>
+                            <div class="session-notes">
+                                <p><strong>Your notes:</strong> Excellent help with calculus derivatives. Sarah is very patient and explains step-by-step.</p>
+                            </div>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn-book-again" onclick="bookAgain('sarah-johnson')">
+                                <span>🔄</span> Book Again
+                            </button>
+                            <button class="btn-view-details" onclick="viewSessionDetails('session-completed-2')">
+                                <span>📋</span> Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cancelled Sessions -->
+            <div id="cancelled-sessions" class="sessions-content">
+                <div class="sessions-header">
+                    <h2>Cancelled Sessions</h2>
+                </div>
+
+                <div class="sessions-list">
+                    <div class="session-card cancelled">
+                        <div class="session-time-badge cancelled-badge">Cancelled</div>
+                        <div class="session-main">
+                            <div class="session-header">
+                                <div class="session-subject">Physics</div>
+                                <div class="cancellation-reason">Cancelled by tutor</div>
+                            </div>
+                            <h3>Session with Alex Rodriguez</h3>
+                            <div class="session-details">
+                                <div class="detail-item">
+                                    <span class="icon">📅</span>
+                                    <span>Was scheduled for March 10, 2024</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="icon">⏰</span>
+                                    <span>6:00 PM - 7:30 PM</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="icon">💰</span>
+                                    <span>Full refund processed</span>
+                                </div>
+                            </div>
+                            <div class="cancellation-note">
+                                <p><strong>Reason:</strong> Tutor had an emergency. Session was cancelled 2 hours before scheduled time.</p>
+                            </div>
+                        </div>
+                        <div class="session-actions">
+                            <button class="btn-book-again" onclick="bookAgain('alex-rodriguez')">
+                                <span>🔄</span> Book Again
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function showTab(tab) {
+            // Remove active class from all tabs and content
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.sessions-content').forEach(content => content.classList.remove('active'));
+            
+            // Add active class to clicked tab and corresponding content
+            event.target.classList.add('active');
+            document.getElementById(tab + '-sessions').classList.add('active');
+        }
+
+        function messagesTutor(tutorId) {
+            alert('Messaging feature will be implemented. Opening chat with ' + tutorId);
+        }
+
+        function rescheduleSession(sessionId) {
+            alert('Reschedule feature will be implemented for ' + sessionId);
+        }
+
+        function cancelSession(sessionId) {
+            if (confirm('Are you sure you want to cancel this session? Cancellation fees may apply.')) {
+                alert('Cancellation feature will be implemented for ' + sessionId);
+            }
+        }
+
+        function bookAgain(tutorId) {
+            alert('Redirecting to book another session with ' + tutorId);
+            // Will redirect to booking flow
+        }
+
+        function viewSessionDetails(sessionId) {
+            alert('Session details modal will be implemented for ' + sessionId);
+        }
+
+        function filterCompleted() {
+            const month = document.getElementById('monthFilter').value;
+            alert('Filter by month: ' + month + '. Backend integration needed.');
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('userRole');
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</body>
+</html>

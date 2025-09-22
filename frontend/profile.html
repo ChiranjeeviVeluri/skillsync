@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - SkillSync</title>
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>SkillSync</h2>
+            </div>
+            <div class="nav-user">
+                <div class="user-info">
+                    <span class="user-name">John Doe</span>
+                    <span class="user-role">Learner</span>
+                </div>
+                <div class="nav-actions">
+                    <button class="btn-notifications">
+                        <span class="notification-icon">🔔</span>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <button class="btn-logout" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="dashboard.html" class="nav-link">
+                            <span class="nav-icon">📊</span>
+                            <span class="nav-text">Overview</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="findtutor.html" class="nav-link">
+                            <span class="nav-icon">🔍</span>
+                            <span class="nav-text">Find Tutors</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="findsession.html" class="nav-link">
+                            <span class="nav-icon">📅</span>
+                            <span class="nav-text">My Sessions</span>
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a href="profile.html" class="nav-link">
+                            <span class="nav-icon">👤</span>
+                            <span class="nav-text">Profile</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Profile Settings</h1>
+                <p>Manage your account information and preferences</p>
+            </div>
+
+            <div class="profile-layout">
+                <!-- Profile Overview Card -->
+                <div class="profile-overview">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <div class="avatar-display">👤</div>
+                            <button class="btn-change-avatar" onclick="changeAvatar()">
+                                <span>📷</span>
+                            </button>
+                        </div>
+                        <div class="profile-info">
+                            <h2>John Doe</h2>
+                            <p class="profile-email">john.doe@university.edu</p>
+                            <div class="profile-badges">
+                                <span class="badge role-badge">Learner</span>
+                                <span class="badge status-badge active">Active</span>
+                                <span class="badge member-since">Member since March 2024</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-number">12</div>
+                            <div class="stat-label">Sessions Completed</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">4.8</div>
+                            <div class="stat-label">Average Rating</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">24</div>
+                            <div class="stat-label">Hours Learned</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Forms Container -->
+                <div class="profile-forms">
+                    <!-- Personal Information -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h3>Personal Information</h3>
+                            <button class="btn-edit" onclick="editSection('personal')">
+                                <span>✏️</span> Edit
+                            </button>
+                        </div>
+                        
+                        <form id="personalForm" class="profile-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName">First Name</label>
+                                    <input type="text" id="firstName" name="firstName" value="John" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Last Name</label>
+                                    <input type="text" id="lastName" name="lastName" value="Doe" readonly>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" name="email" value="john.doe@university.edu" readonly>
+                                <small class="form-help">Email cannot be changed. Contact support if needed.</small>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="phone">Phone Number</label>
+                                    <input type="tel" id="phone" name="phone" value="+1 (555) 123-4567" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="dateOfBirth">Date of Birth</label>
+                                    <input type="date" id="dateOfBirth" name="dateOfBirth" value="2002-05-15" readonly>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions" id="personalActions" style="display: none;">
+                                <button type="button" class="btn-cancel" onclick="cancelEdit('personal')">Cancel</button>
+                                <button type="submit" class="btn-save">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Academic Information -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h3>Academic Information</h3>
+                            <button class="btn-edit" onclick="editSection('academic')">
+                                <span>✏️</span> Edit
+                            </button>
+                        </div>
+                        
+                        <form id="academicForm" class="profile-form">
+                            <div class="form-group">
+                                <label for="university">University</label>
+                                <input type="text" id="university" name="university" value="State University" readonly>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="program">Program/Major</label>
+                                    <input type="text" id="program" name="program" value="Computer Science" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="yearOfStudy">Year of Study</label>
+                                    <select id="yearOfStudy" name="yearOfStudy" disabled>
+                                        <option value="1">1st Year</option>
+                                        <option value="2" selected>2nd Year</option>
+                                        <option value="3">3rd Year</option>
+                                        <option value="4">4th Year</option>
+                                        <option value="graduate">Graduate</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="gpa">Current GPA</label>
+                                    <input type="number" id="gpa" name="gpa" value="3.7" min="0" max="4" step="0.1" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="expectedGraduation">Expected Graduation</label>
+                                    <input type="month" id="expectedGraduation" name="expectedGraduation" value="2026-05" readonly>
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions" id="academicActions" style="display: none;">
+                                <button type="button" class="btn-cancel" onclick="cancelEdit('academic')">Cancel</button>
+                                <button type="submit" class="btn-save">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Learning Preferences -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h3>Learning Preferences</h3>
+                            <button class="btn-edit" onclick="editSection('preferences')">
+                                <span>✏️</span> Edit
+                            </button>
+                        </div>
+                        
+                        <form id="preferencesForm" class="profile-form">
+                            <div class="form-group">
+                                <label>Subjects of Interest</label>
+                                <div class="subjects-grid" id="subjectsGrid">
+                                    <label class="subject-checkbox">
+                                        <input type="checkbox" name="subjects" value="mathematics" checked disabled>
+                                        <span class="checkbox-custom"></span>
+                                        Mathematics
+                                    </label>
+                                    <label class="subject-checkbox">
+                                        <input type="checkbox" name="subjects" value="physics" disabled>
+                                        <span class="checkbox-custom"></span>
+                                        Physics
+                                    </label>
+                                    <label class="subject-checkbox">
+                                        <input type="checkbox" name="subjects" value="chemistry" disabled>
+                                        <span class="checkbox-custom"></span>
+                                        Chemistry
+                                    </label>
+                                    <label class="subject-checkbox">
+                                        <input type="checkbox" name="subjects" value="computer-science" checked disabled>
+                                        <span class="checkbox-custom"></span>
+                                        Computer Science
+                                    </label>
+                                    <label class="subject-checkbox">
+                                        <input type="checkbox" name="subjects" value="english" disabled>
+                                        <span class="checkbox-custom"></span>
+                                        English
+                                    </label>
+                                    <label class="subject-checkbox">
+                                        <input type="checkbox" name="subjects" value="biology" disabled>
+                                        <span class="checkbox-custom"></span>
+                                        Biology
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="preferredTime">Preferred Session Time</label>
+                                    <select id="preferredTime" name="preferredTime" disabled>
+                                        <option value="morning">Morning (8 AM - 12 PM)</option>
+                                        <option value="afternoon" selected>Afternoon (12 PM - 5 PM)</option>
+                                        <option value="evening">Evening (5 PM - 9 PM)</option>
+                                        <option value="flexible">Flexible</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sessionFormat">Preferred Session Format</label>
+                                    <select id="sessionFormat" name="sessionFormat" disabled>
+                                        <option value="online" selected>Online</option>
+                                        <option value="in-person">In-Person</option>
+                                        <option value="both">Both</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="learningStyle">Learning Style</label>
+                                <textarea id="learningStyle" name="learningStyle" rows="3" readonly placeholder="Describe how you learn best...">I learn best with visual explanations and step-by-step examples. I prefer interactive sessions where I can ask questions frequently.</textarea>
+                            </div>
+                            
+                            <div class="form-actions" id="preferencesActions" style="display: none;">
+                                <button type="button" class="btn-cancel" onclick="cancelEdit('preferences')">Cancel</button>
+                                <button type="submit" class="btn-save">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Account Settings -->
+                    <div class="form-section">
+                        <div class="section-header">
+                            <h3>Account Settings</h3>
+                        </div>
+                        
+                        <div class="settings-list">
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Change Password</h4>
+                                    <p>Update your account password</p>
+                                </div>
+                                <button class="btn-setting" onclick="changePassword()">Change</button>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Email Notifications</h4>
+                                    <p>Manage your notification preferences</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="emailNotifications" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>SMS Notifications</h4>
+                                    <p>Receive session reminders via SMS</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="smsNotifications">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <h4>Profile Visibility</h4>
+                                    <p>Control who can see your profile</p>
+                                </div>
+                                <select id="profileVisibility" class="setting-select">
+                                    <option value="public" selected>Public</option>
+                                    <option value="university">University Only</option>
+                                    <option value="private">Private</option>
+                                </select>
+                            </div>
+                            
+                            <div class="setting-item danger-zone">
+                                <div class="setting-info">
+                                    <h4>Delete Account</h4>
+                                    <p>Permanently delete your account and all data</p>
+                                </div>
+                                <button class="btn-danger" onclick="deleteAccount()">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div id="passwordModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Change Password</h3>
+                <button class="btn-close" onclick="closePasswordModal()">&times;</button>
+            </div>
+            <form id="passwordForm">
+                <div class="form-group">
+                    <label for="currentPassword">Current Password</label>
+                    <input type="password" id="currentPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <input type="password" id="newPassword" required>
+                    <small class="form-help">Password must be at least 8 characters long</small>
+                </div>
+                <div class="form-group">
+                    <label for="confirmNewPassword">Confirm New Password</label>
+                    <input type="password" id="confirmNewPassword" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closePasswordModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Update Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let editMode = {
+            personal: false,
+            academic: false,
+            preferences: false
+        };
+
+        function editSection(section) {
+            editMode[section] = true;
+            const form = document.getElementById(section + 'Form');
+            const actions = document.getElementById(section + 'Actions');
+            
+            // Enable form inputs
+            const inputs = form.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                if (input.id !== 'email') { // Email should remain readonly
+                    input.removeAttribute('readonly');
+                    input.removeAttribute('disabled');
+                }
+            });
+            
+            // Show action buttons
+            actions.style.display = 'flex';
+            
+            // Hide edit button
+            const editBtn = form.parentElement.querySelector('.btn-edit');
+            editBtn.style.display = 'none';
+        }
+
+        function cancelEdit(section) {
+            editMode[section] = false;
+            const form = document.getElementById(section + 'Form');
+            const actions = document.getElementById(section + 'Actions');
+            
+            // Disable form inputs and reset values
+            const inputs = form.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                input.setAttribute('readonly', 'readonly');
+                input.setAttribute('disabled', 'disabled');
+                // Reset to original values (in real app, would fetch from backend)
+            });
+            
+            // Hide action buttons
+            actions.style.display = 'none';
+            
+            // Show edit button
+            const editBtn = form.parentElement.querySelector('.btn-edit');
+            editBtn.style.display = 'flex';
+        }
+
+        function changeAvatar() {
+            alert('Avatar change functionality will be implemented. Will allow uploading profile pictures.');
+        }
+
+        function changePassword() {
+            document.getElementById('passwordModal').style.display = 'flex';
+        }
+
+        function closePasswordModal() {
+            document.getElementById('passwordModal').style.display = 'none';
+            document.getElementById('passwordForm').reset();
+        }
+
+        function deleteAccount() {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                if (confirm('This will permanently delete all your data, sessions, and account information. Are you absolutely sure?')) {
+                    alert('Account deletion functionality will be implemented with proper confirmation flow.');
+                }
+            }
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('userRole');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Form submissions
+        document.getElementById('personalForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Personal information update will be connected to backend');
+            cancelEdit('personal');
+        });
+
+        document.getElementById('academicForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Academic information update will be connected to backend');
+            cancelEdit('academic');
+        });
+
+        document.getElementById('preferencesForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Preferences update will be connected to backend');
+            cancelEdit('preferences');
+        });
+
+        document.getElementById('passwordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmNewPassword').value;
+            
+            if (newPassword !== confirmPassword) {
+                alert('New passwords do not match');
+                return;
+            }
+            
+            if (newPassword.length < 8) {
+                alert('Password must be at least 8 characters long');
+                return;
+            }
+            
+            alert('Password change will be connected to backend');
+            closePasswordModal();
+        });
+
+        // Toggle switches
+        document.getElementById('emailNotifications').addEventListener('change', function() {
+            alert('Email notification preference will be saved to backend');
+        });
+
+        document.getElementById('smsNotifications').addEventListener('change', function() {
+            alert('SMS notification preference will be saved to backend');
+        });
+
+        document.getElementById('profileVisibility').addEventListener('change', function() {
+            alert('Profile visibility setting will be saved to backend');
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('passwordModal');
+            if (event.target == modal) {
+                closePasswordModal();
+            }
+        }
+    </script>
+</body>
+</html>
