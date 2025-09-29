@@ -5,7 +5,15 @@
       "Bash(npm run dev:*)",
       "Bash(start frontend/login.html)",
       "Bash(python:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(npx kill-port:*)",
+      "Bash(node:*)",
+      "Bash(start Findtutor.html)",
+      "Bash(start http://localhost:5000/findtutor.html)",
+      "Bash(start http://localhost:5000/login.html)",
+      "Bash(start http://localhost:5000/findsession.html)",
+      "Bash(start http://localhost:5000/debug.html)",
+      "Bash(start http://localhost:5000/test-sessions.html)"
     ],
     "deny": [],
     "ask": []

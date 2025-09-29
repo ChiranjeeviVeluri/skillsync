@@ -1,11 +1,17 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-  name: {
+  firstName: {
     type: String,
-    required: [true, 'Name is required'],
+    required: [true, 'First name is required'],
     trim: true,
-    maxlength: [50, 'Name cannot exceed 50 characters']
+    maxlength: [30, 'First name cannot exceed 30 characters']
+  },
+  lastName: {
+    type: String,
+    required: [true, 'Last name is required'],
+    trim: true,
+    maxlength: [30, 'Last name cannot exceed 30 characters']
   },
   email: {
     type: String,
@@ -18,6 +24,17 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Password is required'],
     minlength: [6, 'Password must be at least 6 characters']
+  },
+  university: {
+    type: String,
+    required: [true, 'University is required'],
+    trim: true,
+    maxlength: [100, 'University name cannot exceed 100 characters']
+  },
+  year: {
+    type: String,
+    required: [true, 'Year of study is required'],
+    enum: ['1', '2', '3', '4', 'graduate']
   },
   role: {
     type: String,
