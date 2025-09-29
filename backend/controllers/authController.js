@@ -21,7 +21,7 @@ const signup = async (req, res) => {
       });
     }
 
-    const { name, email, password, role, subjects } = req.body;
+    const { firstName, lastName, email, password, university, year, role, subjects } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -34,9 +34,12 @@ const signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 12);
 
     const user = new User({
-      name,
+      firstName,
+      lastName,
       email,
       password: hashedPassword,
+      university,
+      year,
       role,
       subjects: role === 'tutor' ? subjects : []
     });
@@ -51,8 +54,11 @@ const signup = async (req, res) => {
       token,
       user: {
         id: user._id,
-        name: user.name,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
+        university: user.university,
+        year: user.year,
         role: user.role,
         subjects: user.subjects
       }
@@ -104,8 +110,11 @@ const login = async (req, res) => {
       token,
       user: {
         id: user._id,
-        name: user.name,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
+        university: user.university,
+        year: user.year,
         role: user.role,
         subjects: user.subjects
       }
@@ -168,9 +177,13 @@ const checkTokenStatus = async (req, res) => {
       message: 'Token is valid',
       user: {
         id: req.user._id,
-        name: req.user.name,
+        firstName: req.user.firstName,
+        lastName: req.user.lastName,
         email: req.user.email,
-        role: req.user.role
+        university: req.user.university,
+        year: req.user.year,
+        role: req.user.role,
+        subjects: req.user.subjects
       }
     });
   } catch (error) {
