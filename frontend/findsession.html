@@ -727,20 +727,11 @@
                 console.log('Upcoming bookings details:', upcoming);
 
                 // Update tab counts
-                document.getElementById('pendingCount').textContent = pending.length;
-                document.getElementById('upcomingCount').textContent = upcoming.length;
-                document.getElementById('completedCount').textContent = completed.length;
-                document.getElementById('cancelledCount').textContent = cancelled.length;
+                updateTabCounts();
 
                 // Display current tab
                 console.log('About to display bookings for currentTab:', currentTab);
                 displayBookings(currentTab);
-
-                // Also explicitly try upcoming to debug
-                setTimeout(() => {
-                    console.log('Testing upcoming display after timeout...');
-                    displayBookings('upcoming');
-                }, 1000);
                 hideLoadingState();
 
             } catch (error) {
@@ -748,6 +739,27 @@
                 hideLoadingState();
                 showError('Failed to load sessions. Please try again.');
             }
+        }
+
+        function updateTabCounts() {
+            // Group bookings by status
+            const pending = allBookings.filter(b => b.status === 'pending');
+            const upcoming = allBookings.filter(b => b.status === 'accepted');
+            const completed = allBookings.filter(b => b.status === 'completed');
+            const cancelled = allBookings.filter(b => b.status === 'cancelled' || b.status === 'rejected');
+
+            // Update tab count badges
+            document.getElementById('pendingCount').textContent = pending.length;
+            document.getElementById('upcomingCount').textContent = upcoming.length;
+            document.getElementById('completedCount').textContent = completed.length;
+            document.getElementById('cancelledCount').textContent = cancelled.length;
+
+            console.log('Updated tab counts:', {
+                pending: pending.length,
+                upcoming: upcoming.length,
+                completed: completed.length,
+                cancelled: cancelled.length
+            });
         }
 
         function displayBookings(status) {
@@ -993,7 +1005,7 @@
 
                 if (response.success) {
                     showSuccess(`Session ${status} successfully!`);
-                    await loadBookings(); // Reload to update the display
+                    await showTab(currentTab); // Reload current tab to update the display
                 } else {
                     throw new Error(response.message);
                 }
@@ -1024,7 +1036,7 @@
             }
         }
 
-        function showTab(tab) {
+        async function showTab(tab) {
             console.log('Switching to tab:', tab);
             currentTab = tab;
 
@@ -1036,8 +1048,30 @@
             document.getElementById(tab + 'Tab').classList.add('active');
             document.getElementById(tab + '-sessions').classList.add('active');
 
-            // Display bookings for this tab
-            displayBookings(tab);
+            // Show loading state
+            showLoadingState();
+
+            try {
+                // Make fresh API call to get latest bookings
+                console.log(`Making fresh API call for tab: ${tab}`);
+                const response = await api.getBookings();
+                allBookings = response.data || [];
+                console.log(`Fresh data loaded: ${allBookings.length} total bookings`);
+
+                // Update tab counts with fresh data
+                updateTabCounts();
+
+                // Display bookings for this tab
+                displayBookings(tab);
+
+                // Hide loading state
+                hideLoadingState();
+
+            } catch (error) {
+                console.error(`Error loading bookings for tab ${tab}:`, error);
+                hideLoadingState();
+                showError('Failed to load sessions. Please try again.');
+            }
         }
 
         function showLoadingState() {
@@ -1268,7 +1302,7 @@
                     const booking = allBookings.find(b => b._id === sessionId);
                     if (booking) {
                         booking.rated = true;
-                        displayBookings(currentTab); // Refresh display
+                        await showTab(currentTab); // Refresh current tab display
                     }
 
                 } catch (error) {
