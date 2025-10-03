@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Sessions - SkillSync</title>
+    <link rel="stylesheet" href="assets/css/findsession.css">
+    <script src="assets/js/api.js"></script>
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>SkillSync</h2>
+            </div>
+            <div class="nav-user">
+                <div class="user-info">
+                    <span class="user-name" id="userName">Loading...</span>
+                    <span class="user-role" id="userRole">Loading...</span>
+                </div>
+                <div class="nav-actions">
+                    <button class="btn-notifications">
+                        <span class="notification-icon">🔔</span>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <button class="btn-logout" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="dashboard.html" class="nav-link">
+                            <span class="nav-icon">📊</span>
+                            <span class="nav-text">Overview</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="findTutorsNav">
+                        <a href="findtutor.html" class="nav-link">
+                            <span class="nav-icon">🔍</span>
+                            <span class="nav-text">Find Tutors</span>
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a href="findsession.html" class="nav-link">
+                            <span class="nav-icon">📅</span>
+                            <span class="nav-text">My Sessions</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="tutorDashboardNav" style="display: none;">
+                        <a href="tutor-dashboard.html" class="nav-link">
+                            <span class="nav-icon">👨‍🏫</span>
+                            <span class="nav-text">Tutor Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="profile.html" class="nav-link">
+                            <span class="nav-icon">👤</span>
+                            <span class="nav-text">Profile</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1 id="pageTitle">My Sessions</h1>
+                <p id="pageSubtitle">Manage your tutoring sessions</p>
+            </div>
+
+            <!-- Session Tabs -->
+            <div class="sessions-tabs" id="sessionsTabs">
+                <button class="tab-btn active" onclick="showTab('pending')" id="pendingTab">
+                    <span class="tab-icon">⏳</span>
+                    <span class="tab-text">Pending (<span id="pendingCount">0</span>)</span>
+                </button>
+                <button class="tab-btn" onclick="showTab('upcoming')" id="upcomingTab">
+                    <span class="tab-icon">📅</span>
+                    <span class="tab-text">Upcoming (<span id="upcomingCount">0</span>)</span>
+                </button>
+                <button class="tab-btn" onclick="showTab('completed')" id="completedTab">
+                    <span class="tab-icon">✅</span>
+                    <span class="tab-text">Completed (<span id="completedCount">0</span>)</span>
+                </button>
+                <button class="tab-btn" onclick="showTab('cancelled')" id="cancelledTab">
+                    <span class="tab-icon">❌</span>
+                    <span class="tab-text">Cancelled (<span id="cancelledCount">0</span>)</span>
+                </button>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-container">
+                <div class="loading-spinner"></div>
+                <p>Loading your sessions...</p>
+            </div>
+
+            <!-- Pending Sessions -->
+            <div id="pending-sessions" class="sessions-content active">
+                <div class="sessions-header">
+                    <h2 id="pendingHeader">Pending Requests</h2>
+                    <div class="header-actions" id="pendingActions">
+                        <button class="btn-book-new" onclick="window.location.href='findtutor.html'" id="bookNewBtn">
+                            <span>➕</span> Book New Session
+                        </button>
+                    </div>
+                </div>
+                <div class="sessions-list" id="pendingList">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Upcoming Sessions -->
+            <div id="upcoming-sessions" class="sessions-content">
+                <div class="sessions-header">
+                    <h2>Upcoming Sessions</h2>
+                    <div class="header-actions">
+                        <button class="btn-book-new" onclick="window.location.href='findtutor.html'" id="bookNewBtn2">
+                            <span>➕</span> Book New Session
+                        </button>
+                    </div>
+                </div>
+                <div class="sessions-list" id="upcomingList">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Completed Sessions -->
+            <div id="completed-sessions" class="sessions-content">
+                <div class="sessions-header">
+                    <h2>Completed Sessions</h2>
+                </div>
+                <div class="sessions-list" id="completedList">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Cancelled Sessions -->
+            <div id="cancelled-sessions" class="sessions-content">
+                <div class="sessions-header">
+                    <h2>Cancelled Sessions</h2>
+                </div>
+                <div class="sessions-list" id="cancelledList">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+            </div>
+
+            <!-- No Results Message -->
+            <div id="noResults" class="no-results" style="display: none;">
+                <div class="no-results-content">
+                    <h3>No sessions found</h3>
+                    <p id="noResultsText">You don't have any sessions yet.</p>
+                    <button class="btn-book-new" onclick="window.location.href='findtutor.html'">
+                        <span>➕</span> Book Your First Session
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Session Details Modal -->
+    <div id="sessionDetailsModal" class="modal" style="display: none;">
+        <div class="modal-content large-modal">
+            <div class="modal-header">
+                <h3 id="modalSessionTitle">Session Details</h3>
+                <button class="modal-close" onclick="closeSessionModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="sessionDetailsContent">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rating Modal -->
+    <div id="ratingModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Rate Your Session</h3>
+                <button class="modal-close" onclick="closeRatingModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="ratingForm">
+                    <div class="rating-section">
+                        <h4 id="ratingTutorName">Rate your session with [Tutor Name]</h4>
+                        <div class="star-rating">
+                            <span class="star" data-rating="1">☆</span>
+                            <span class="star" data-rating="2">☆</span>
+                            <span class="star" data-rating="3">☆</span>
+                            <span class="star" data-rating="4">☆</span>
+                            <span class="star" data-rating="5">☆</span>
+                        </div>
+                        <input type="hidden" id="sessionRating" value="0">
+                        <input type="hidden" id="ratingSessionId" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="sessionReview">How was your session? (Optional)</label>
+                        <textarea id="sessionReview" placeholder="Share your experience with other learners..." maxlength="500"></textarea>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-cancel" onclick="closeRatingModal()">Skip</button>
+                        <button type="submit" class="btn-submit">Submit Rating</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reschedule Modal -->
+    <div id="rescheduleModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Reschedule Session</h3>
+                <button class="modal-close" onclick="closeRescheduleModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="rescheduleForm">
+                    <div class="current-session-info" id="currentSessionInfo">
+                        <!-- Current session details will be shown here -->
+                    </div>
+                    <div class="form-group">
+                        <label for="newDate">New Date*</label>
+                        <input type="date" id="newDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newTime">New Time*</label>
+                        <select id="newTime" required>
+                            <option value="">Select new date first</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="rescheduleReason">Reason for Rescheduling (Optional)</label>
+                        <textarea id="rescheduleReason" placeholder="Why do you need to reschedule?" maxlength="200"></textarea>
+                    </div>
+                    <input type="hidden" id="rescheduleSessionId" value="">
+                    <div class="modal-actions">
+                        <button type="button" class="btn-cancel" onclick="closeRescheduleModal()">Cancel</button>
+                        <button type="submit" class="btn-submit">Request Reschedule</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Loading styles */
+        .loading-container {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 80px 20px;
+            color: #666;
+        }
+
+        .no-results h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        /* Session card styles for accept/reject buttons */
+        .booking-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .btn-accept {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-accept:hover {
+            background: #218838;
+        }
+
+        .btn-reject {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-reject:hover {
+            background: #c82333;
+        }
+
+        .btn-cancel {
+            background: #ffc107;
+            color: #212529;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-cancel:hover {
+            background: #e0a800;
+        }
+
+        .session-message {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border-left: 4px solid #007bff;
+        }
+
+        .session-message strong {
+            color: #333;
+        }
+
+        .tutor-perspective .btn-book-new {
+            display: none;
+        }
+
+        /* Enhanced Modal Styles */
+        .large-modal {
+            max-width: 800px;
+            width: 95%;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(2px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: #333;
+            font-size: 20px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .btn-submit {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-submit:hover {
+            background: #0056b3;
+        }
+
+        /* Star Rating Styles */
+        .star-rating {
+            display: flex;
+            gap: 5px;
+            margin: 15px 0;
+            font-size: 24px;
+        }
+
+        .star {
+            cursor: pointer;
+            color: #ddd;
+            transition: color 0.2s;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #ffc107;
+        }
+
+        .rating-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .rating-section h4 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        /* Session Details Styles */
+        .session-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .detail-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+        }
+
+        .detail-section h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .detail-section p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .session-notes {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+        }
+
+        .session-notes h4 {
+            margin: 0 0 10px 0;
+            color: #856404;
+        }
+
+        .current-session-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .current-session-info h4 {
+            margin: 0 0 8px 0;
+            color: #1976d2;
+        }
+
+        .current-session-info p {
+            margin: 2px 0;
+            color: #333;
+        }
+
+        /* Enhanced Session Cards */
+        .session-card {
+            position: relative;
+        }
+
+        .session-card .btn-details {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .session-card .btn-details:hover {
+            background: #5a6268;
+        }
+
+        .btn-reschedule {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-reschedule:hover {
+            background: #138496;
+        }
+
+        .btn-rate {
+            background: #ffc107;
+            color: #212529;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-rate:hover {
+            background: #e0a800;
+        }
+    </style>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let allBookings = [];
+        let currentTab = 'pending';
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Check authentication
+            if (!auth.requireAuth()) {
+                return;
+            }
+
+            await initializePage();
+        });
+
+        async function initializePage() {
+            try {
+                showLoadingState();
+
+                // Load user info
+                currentUser = api.getUser();
+                if (currentUser) {
+                    document.getElementById('userName').textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+                    document.getElementById('userRole').textContent = currentUser.role === 'tutor' ? 'Tutor' : 'Learner';
+
+                    // Update UI based on role
+                    updateUIForRole();
+                }
+
+                // Load bookings
+                await loadBookings();
+
+            } catch (error) {
+                console.error('Error initializing page:', error);
+                showError('Failed to load sessions. Please refresh the page.');
+            }
+        }
+
+        function updateUIForRole() {
+            if (currentUser.role === 'tutor') {
+                document.getElementById('pageTitle').textContent = 'My Teaching Sessions';
+                document.getElementById('pageSubtitle').textContent = 'Manage your tutoring requests and sessions';
+                document.getElementById('pendingHeader').textContent = 'Booking Requests';
+                document.getElementById('noResultsText').textContent = 'No booking requests yet. Students will find you through the Find Tutors page.';
+
+                // Hide "Book New Session" buttons for tutors
+                document.querySelectorAll('.btn-book-new').forEach(btn => btn.style.display = 'none');
+
+                // Show tutor navigation if exists
+                const tutorNav = document.getElementById('tutorDashboardNav');
+                if (tutorNav) {
+                    tutorNav.style.display = 'block';
+                }
+
+                document.body.classList.add('tutor-perspective');
+            } else {
+                document.getElementById('pendingHeader').textContent = 'Pending Requests';
+                document.getElementById('noResultsText').textContent = 'You haven\'t booked any sessions yet.';
+            }
+        }
+
+        async function loadBookings() {
+            try {
+                const response = await api.getBookings();
+                console.log('Raw API response:', response);
+                allBookings = response.data || [];
+                console.log('All bookings array:', allBookings);
+
+                // Group bookings by status
+                const pending = allBookings.filter(b => b.status === 'pending');
+                const upcoming = allBookings.filter(b => b.status === 'accepted');
+                const completed = allBookings.filter(b => b.status === 'completed');
+                const cancelled = allBookings.filter(b => b.status === 'cancelled' || b.status === 'rejected');
+
+                // Debug logging
+                console.log('Booking counts:', {
+                    total: allBookings.length,
+                    pending: pending.length,
+                    upcoming: upcoming.length,
+                    completed: completed.length,
+                    cancelled: cancelled.length
+                });
+
+                console.log('Upcoming bookings details:', upcoming);
+
+                // Update tab counts
+                updateTabCounts();
+
+                // Display current tab
+                console.log('About to display bookings for currentTab:', currentTab);
+                displayBookings(currentTab);
+                hideLoadingState();
+
+            } catch (error) {
+                console.error('Error loading bookings:', error);
+                hideLoadingState();
+                showError('Failed to load sessions. Please try again.');
+            }
+        }
+
+        function updateTabCounts() {
+            // Group bookings by status
+            const pending = allBookings.filter(b => b.status === 'pending');
+            const upcoming = allBookings.filter(b => b.status === 'accepted');
+            const completed = allBookings.filter(b => b.status === 'completed');
+            const cancelled = allBookings.filter(b => b.status === 'cancelled' || b.status === 'rejected');
+
+            // Update tab count badges
+            document.getElementById('pendingCount').textContent = pending.length;
+            document.getElementById('upcomingCount').textContent = upcoming.length;
+            document.getElementById('completedCount').textContent = completed.length;
+            document.getElementById('cancelledCount').textContent = cancelled.length;
+
+            console.log('Updated tab counts:', {
+                pending: pending.length,
+                upcoming: upcoming.length,
+                completed: completed.length,
+                cancelled: cancelled.length
+            });
+        }
+
+        function displayBookings(status) {
+            console.log('=== DISPLAY BOOKINGS START ===');
+            console.log('Status requested:', status);
+            console.log('All bookings count:', allBookings.length);
+            console.log('All bookings:', allBookings);
+
+            let bookings = [];
+            let listId = '';
+
+            // Clear and explicit filtering
+            if (status === 'pending') {
+                bookings = allBookings.filter(b => b.status === 'pending');
+                listId = 'pendingList';
+            } else if (status === 'upcoming') {
+                bookings = allBookings.filter(b => b.status === 'accepted');
+                listId = 'upcomingList';
+                console.log('UPCOMING FILTER: Looking for status === "accepted"');
+                console.log('Found bookings with accepted status:', bookings.length);
+                bookings.forEach((booking, index) => {
+                    console.log(`Upcoming booking ${index + 1}:`, {
+                        id: booking._id,
+                        subject: booking.subject,
+                        status: booking.status,
+                        date: booking.date
+                    });
+                });
+            } else if (status === 'completed') {
+                bookings = allBookings.filter(b => b.status === 'completed');
+                listId = 'completedList';
+            } else if (status === 'cancelled') {
+                bookings = allBookings.filter(b => b.status === 'cancelled' || b.status === 'rejected');
+                listId = 'cancelledList';
+            }
+
+            console.log(`Final filtered count for ${status}:`, bookings.length);
+
+            const list = document.getElementById(listId);
+            const noResults = document.getElementById('noResults');
+
+            if (!list) {
+                console.error(`ERROR: Could not find list element with ID: ${listId}`);
+                return;
+            }
+
+            console.log(`Found list element: ${listId}`, list);
+
+            if (bookings.length === 0) {
+                console.log(`No bookings for ${status} - showing no results`);
+                if (list) list.style.display = 'none';
+                if (noResults) noResults.style.display = 'block';
+                return;
+            }
+
+            // Show the list and hide no results
+            list.style.display = 'block';
+            if (noResults) noResults.style.display = 'none';
+
+            // Create cards with error handling
+            let cardHtml = '';
+            try {
+                console.log(`Creating ${bookings.length} cards for ${status}...`);
+                cardHtml = bookings.map((booking, index) => {
+                    console.log(`Creating card ${index + 1} for booking:`, booking._id);
+                    return createBookingCard(booking);
+                }).join('');
+                console.log(`Generated HTML length: ${cardHtml.length} characters`);
+            } catch (error) {
+                console.error(`ERROR creating cards for ${status}:`, error);
+                cardHtml = `<div style="padding: 20px; color: red; border: 1px solid red;">
+                    Error loading bookings: ${error.message}
+                </div>`;
+            }
+
+            // Set the HTML
+            list.innerHTML = cardHtml;
+            console.log(`Successfully updated ${listId} with ${bookings.length} bookings`);
+            console.log('=== DISPLAY BOOKINGS END ===');
+        }
+
+        function createBookingCard(booking) {
+            console.log('Creating card for booking:', booking);
+            console.log('Current user:', currentUser);
+            const isUserTutor = currentUser.role === 'tutor';
+            const otherPerson = isUserTutor ? booking.learner : booking.tutor;
+            const date = new Date(booking.date);
+            const formattedDate = date.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            const statusClass = booking.status === 'pending' ? 'status-pending' :
+                              booking.status === 'accepted' ? 'status-confirmed' :
+                              booking.status === 'completed' ? 'status-completed' :
+                              'status-cancelled';
+
+            const timeFromNow = getTimeFromNow(date);
+
+            return `
+                <div class="session-card ${booking.status}">
+                    <div class="session-time-badge ${booking.status === 'cancelled' || booking.status === 'rejected' ? 'cancelled-badge' : ''}">${timeFromNow}</div>
+                    <div class="session-main">
+                        <div class="session-header">
+                            <div class="session-subject">${formatSubject(booking.subject)}</div>
+                            <div class="session-status ${statusClass}">${booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}</div>
+                        </div>
+                        <h3>Session with ${otherPerson.firstName} ${otherPerson.lastName}</h3>
+                        <div class="session-details">
+                            <div class="detail-item">
+                                <span class="icon">📅</span>
+                                <span>${formattedDate}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="icon">⏰</span>
+                                <span>${booking.timeSlot} (${booking.duration} minutes)</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="icon">📍</span>
+                                <span>${booking.location}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="icon">${isUserTutor ? '👨‍🎓' : '👨‍🏫'}</span>
+                                <span>${otherPerson.firstName} ${otherPerson.lastName} - ${otherPerson.university}</span>
+                            </div>
+                        </div>
+                        ${booking.message ? `
+                            <div class="session-message">
+                                <strong>Message:</strong> ${booking.message}
+                            </div>
+                        ` : ''}
+                        ${createActionButtons(booking)}
+                    </div>
+                </div>
+            `;
+        }
+
+        function createActionButtons(booking) {
+            const isUserTutor = currentUser.role === 'tutor';
+
+            if (booking.status === 'pending' && isUserTutor) {
+                // Tutor can accept or reject pending bookings
+                return `
+                    <div class="booking-actions">
+                        <button class="btn-details" onclick="showSessionDetails('${booking._id}')">
+                            <span>📋</span> Details
+                        </button>
+                        <button class="btn-accept" onclick="updateBookingStatus('${booking._id}', 'accepted')">
+                            <span>✅</span> Accept
+                        </button>
+                        <button class="btn-reject" onclick="updateBookingStatus('${booking._id}', 'rejected')">
+                            <span>❌</span> Reject
+                        </button>
+                    </div>
+                `;
+            } else if (booking.status === 'accepted') {
+                // Both can cancel, reschedule, tutor can complete
+                let buttons = `
+                    <div class="session-actions">
+                        <button class="btn-details" onclick="showSessionDetails('${booking._id}')">
+                            <span>📋</span> Details
+                        </button>
+                        <button class="btn-reschedule" onclick="showRescheduleModal('${booking._id}')">
+                            <span>📅</span> Reschedule
+                        </button>
+                        <button class="btn-cancel" onclick="updateBookingStatus('${booking._id}', 'cancelled')">
+                            <span>❌</span> Cancel
+                        </button>
+                `;
+
+                if (isUserTutor) {
+                    buttons += `
+                        <button class="btn-accept" onclick="updateBookingStatus('${booking._id}', 'completed')">
+                            <span>✅</span> Mark Complete
+                        </button>
+                    `;
+                }
+
+                buttons += '</div>';
+                return buttons;
+            } else if (booking.status === 'completed') {
+                // Show details and rating (for learners)
+                let buttons = `
+                    <div class="session-actions">
+                        <button class="btn-details" onclick="showSessionDetails('${booking._id}')">
+                            <span>📋</span> Details
+                        </button>
+                `;
+
+                if (!isUserTutor && !booking.rated) {
+                    buttons += `
+                        <button class="btn-rate" onclick="showRatingModal('${booking._id}')">
+                            <span>⭐</span> Rate Session
+                        </button>
+                    `;
+                }
+
+                buttons += '</div>';
+                return buttons;
+            } else if (booking.status === 'pending' && !isUserTutor) {
+                // Learner can cancel pending requests
+                return `
+                    <div class="session-actions">
+                        <button class="btn-details" onclick="showSessionDetails('${booking._id}')">
+                            <span>📋</span> Details
+                        </button>
+                        <button class="btn-cancel" onclick="updateBookingStatus('${booking._id}', 'cancelled')">
+                            <span>❌</span> Cancel Request
+                        </button>
+                    </div>
+                `;
+            } else {
+                // For cancelled/rejected - just show details
+                return `
+                    <div class="session-actions">
+                        <button class="btn-details" onclick="showSessionDetails('${booking._id}')">
+                            <span>📋</span> Details
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        async function updateBookingStatus(bookingId, status) {
+            const confirmMessages = {
+                'accepted': 'Accept this booking request?',
+                'rejected': 'Reject this booking request?',
+                'cancelled': 'Cancel this session?',
+                'completed': 'Mark this session as completed?'
+            };
+
+            if (!confirm(confirmMessages[status])) {
+                return;
+            }
+
+            try {
+                console.log('Updating booking status:', { bookingId, status });
+                const response = await api.updateBookingStatus(bookingId, status);
+
+                console.log('Update response:', response);
+
+                if (response.success) {
+                    showSuccess(`Session ${status} successfully!`);
+                    await showTab(currentTab); // Reload current tab to update the display
+                } else {
+                    throw new Error(response.message);
+                }
+            } catch (error) {
+                console.error('Error updating booking status:', error);
+                showError(error.message || 'Failed to update session status. Please try again.');
+            }
+        }
+
+        function formatSubject(subject) {
+            return subject.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        function getTimeFromNow(date) {
+            const now = new Date();
+            const diffDays = Math.ceil((date - now) / (1000 * 60 * 60 * 24));
+
+            if (diffDays < 0) {
+                return Math.abs(diffDays) === 1 ? 'Yesterday' : `${Math.abs(diffDays)} days ago`;
+            } else if (diffDays === 0) {
+                return 'Today';
+            } else if (diffDays === 1) {
+                return 'Tomorrow';
+            } else if (diffDays <= 7) {
+                return `In ${diffDays} days`;
+            } else {
+                return 'Next week';
+            }
+        }
+
+        async function showTab(tab) {
+            console.log('Switching to tab:', tab);
+            currentTab = tab;
+
+            // Remove active class from all tabs and content
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.sessions-content').forEach(content => content.classList.remove('active'));
+
+            // Add active class to clicked tab and corresponding content
+            document.getElementById(tab + 'Tab').classList.add('active');
+            document.getElementById(tab + '-sessions').classList.add('active');
+
+            // Show loading state
+            showLoadingState();
+
+            try {
+                // Make fresh API call to get latest bookings
+                console.log(`Making fresh API call for tab: ${tab}`);
+                const response = await api.getBookings();
+                allBookings = response.data || [];
+                console.log(`Fresh data loaded: ${allBookings.length} total bookings`);
+
+                // Update tab counts with fresh data
+                updateTabCounts();
+
+                // Display bookings for this tab
+                displayBookings(tab);
+
+                // Hide loading state
+                hideLoadingState();
+
+            } catch (error) {
+                console.error(`Error loading bookings for tab ${tab}:`, error);
+                hideLoadingState();
+                showError('Failed to load sessions. Please try again.');
+            }
+        }
+
+        function showLoadingState() {
+            document.getElementById('loadingState').style.display = 'block';
+            document.querySelectorAll('.sessions-content').forEach(content => content.style.display = 'none');
+            document.getElementById('noResults').style.display = 'none';
+        }
+
+        function hideLoadingState() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.querySelectorAll('.sessions-content').forEach(content => content.style.display = 'none');
+            document.getElementById(currentTab + '-sessions').style.display = 'block';
+        }
+
+        function showError(message) {
+            alert('❌ ' + message);
+        }
+
+        function showSuccess(message) {
+            alert('✅ ' + message);
+        }
+
+        async function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                await auth.logout();
+            }
+        }
+
+        // Enhanced Session Management Functions
+
+        async function showSessionDetails(bookingId) {
+            try {
+                const booking = allBookings.find(b => b._id === bookingId);
+                if (!booking) {
+                    showError('Session not found');
+                    return;
+                }
+
+                const isUserTutor = currentUser.role === 'tutor';
+                const otherPerson = isUserTutor ? booking.learner : booking.tutor;
+                const date = new Date(booking.date);
+                const formattedDate = date.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+
+                document.getElementById('modalSessionTitle').textContent = `${formatSubject(booking.subject)} Session`;
+
+                const detailsContent = `
+                    <div class="session-detail-grid">
+                        <div class="detail-section">
+                            <h4>Session Information</h4>
+                            <p><strong>Subject:</strong> ${formatSubject(booking.subject)}</p>
+                            <p><strong>Date:</strong> ${formattedDate}</p>
+                            <p><strong>Time:</strong> ${booking.timeSlot}</p>
+                            <p><strong>Duration:</strong> ${booking.duration} minutes</p>
+                            <p><strong>Location:</strong> ${booking.location}</p>
+                            <p><strong>Status:</strong> ${booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>${isUserTutor ? 'Student' : 'Tutor'} Information</h4>
+                            <p><strong>Name:</strong> ${otherPerson.firstName} ${otherPerson.lastName}</p>
+                            <p><strong>Email:</strong> ${otherPerson.email}</p>
+                            <p><strong>University:</strong> ${otherPerson.university}</p>
+                            <p><strong>School:</strong> ${otherPerson.school || 'N/A'}</p>
+                            ${!isUserTutor ? `<p><strong>Subjects:</strong> ${booking.tutor.subjects.map(formatSubject).join(', ')}</p>` : ''}
+                        </div>
+                    </div>
+                    ${booking.message ? `
+                        <div class="session-notes">
+                            <h4>Session Message</h4>
+                            <p>${booking.message}</p>
+                        </div>
+                    ` : ''}
+                    <div class="session-notes">
+                        <h4>Session ID</h4>
+                        <p style="font-family: monospace; background: #f8f9fa; padding: 8px; border-radius: 4px;">${booking._id}</p>
+                    </div>
+                `;
+
+                document.getElementById('sessionDetailsContent').innerHTML = detailsContent;
+                document.getElementById('sessionDetailsModal').style.display = 'block';
+
+            } catch (error) {
+                console.error('Error showing session details:', error);
+                showError('Failed to load session details');
+            }
+        }
+
+        function closeSessionModal() {
+            document.getElementById('sessionDetailsModal').style.display = 'none';
+        }
+
+        function showRatingModal(bookingId) {
+            const booking = allBookings.find(b => b._id === bookingId);
+            if (!booking) {
+                showError('Session not found');
+                return;
+            }
+
+            document.getElementById('ratingTutorName').textContent = `Rate your session with ${booking.tutor.firstName} ${booking.tutor.lastName}`;
+            document.getElementById('ratingSessionId').value = bookingId;
+            document.getElementById('sessionRating').value = '0';
+            document.getElementById('sessionReview').value = '';
+
+            // Reset star rating
+            document.querySelectorAll('.star').forEach(star => {
+                star.classList.remove('active');
+                star.textContent = '☆';
+            });
+
+            document.getElementById('ratingModal').style.display = 'block';
+        }
+
+        function closeRatingModal() {
+            document.getElementById('ratingModal').style.display = 'none';
+        }
+
+        function showRescheduleModal(bookingId) {
+            const booking = allBookings.find(b => b._id === bookingId);
+            if (!booking) {
+                showError('Session not found');
+                return;
+            }
+
+            const isUserTutor = currentUser.role === 'tutor';
+            const otherPerson = isUserTutor ? booking.learner : booking.tutor;
+            const date = new Date(booking.date);
+            const formattedDate = date.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            document.getElementById('currentSessionInfo').innerHTML = `
+                <h4>Current Session</h4>
+                <p><strong>Subject:</strong> ${formatSubject(booking.subject)}</p>
+                <p><strong>With:</strong> ${otherPerson.firstName} ${otherPerson.lastName}</p>
+                <p><strong>Currently scheduled:</strong> ${formattedDate} at ${booking.timeSlot}</p>
+            `;
+
+            document.getElementById('rescheduleSessionId').value = bookingId;
+            document.getElementById('newDate').value = '';
+            document.getElementById('newTime').innerHTML = '<option value="">Select new date first</option>';
+            document.getElementById('rescheduleReason').value = '';
+
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('newDate').min = today;
+
+            document.getElementById('rescheduleModal').style.display = 'block';
+        }
+
+        function closeRescheduleModal() {
+            document.getElementById('rescheduleModal').style.display = 'none';
+        }
+
+        // Star rating functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const stars = document.querySelectorAll('.star');
+
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = parseInt(this.getAttribute('data-rating'));
+                    document.getElementById('sessionRating').value = rating;
+
+                    // Update star display
+                    stars.forEach((s, index) => {
+                        if (index < rating) {
+                            s.classList.add('active');
+                            s.textContent = '★';
+                        } else {
+                            s.classList.remove('active');
+                            s.textContent = '☆';
+                        }
+                    });
+                });
+
+                star.addEventListener('mouseover', function() {
+                    const rating = parseInt(this.getAttribute('data-rating'));
+
+                    stars.forEach((s, index) => {
+                        if (index < rating) {
+                            s.textContent = '★';
+                        } else {
+                            s.textContent = '☆';
+                        }
+                    });
+                });
+            });
+
+            // Reset on mouse leave
+            document.querySelector('.star-rating').addEventListener('mouseleave', function() {
+                const currentRating = parseInt(document.getElementById('sessionRating').value);
+
+                stars.forEach((s, index) => {
+                    if (index < currentRating) {
+                        s.textContent = '★';
+                    } else {
+                        s.textContent = '☆';
+                    }
+                });
+            });
+
+            // Rating form submission
+            document.getElementById('ratingForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const sessionId = document.getElementById('ratingSessionId').value;
+                const rating = parseInt(document.getElementById('sessionRating').value);
+                const review = document.getElementById('sessionReview').value.trim();
+
+                if (rating === 0) {
+                    showError('Please select a rating');
+                    return;
+                }
+
+                try {
+                    // Submit rating to the backend
+                    console.log('Submitting rating:', { bookingId: sessionId, rating, review });
+
+                    const response = await api.submitRating(sessionId, rating, review);
+
+                    if (response.success) {
+                        showSuccess('Thank you for your rating!');
+                        closeRatingModal();
+
+                        // Refresh current tab display to show updated UI
+                        await showTab(currentTab);
+                    } else {
+                        throw new Error(response.message || 'Failed to submit rating');
+                    }
+
+                } catch (error) {
+                    console.error('Error submitting rating:', error);
+                    showError(error.message || 'Failed to submit rating. Please try again.');
+                }
+            });
+
+            // Reschedule form submission
+            document.getElementById('rescheduleForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const sessionId = document.getElementById('rescheduleSessionId').value;
+                const newDate = document.getElementById('newDate').value;
+                const newTime = document.getElementById('newTime').value;
+                const reason = document.getElementById('rescheduleReason').value.trim();
+
+                if (!newDate || !newTime) {
+                    showError('Please select both date and time');
+                    return;
+                }
+
+                try {
+                    // Here you would send the reschedule request to the backend
+                    showSuccess('Reschedule request sent! The other party will be notified.');
+                    closeRescheduleModal();
+
+                } catch (error) {
+                    console.error('Error rescheduling session:', error);
+                    showError('Failed to reschedule session. Please try again.');
+                }
+            });
+
+            // Load availability when date changes in reschedule modal
+            document.getElementById('newDate').addEventListener('change', async function() {
+                const date = this.value;
+                const sessionId = document.getElementById('rescheduleSessionId').value;
+                const booking = allBookings.find(b => b._id === sessionId);
+
+                if (!booking) return;
+
+                const tutorId = booking.tutor._id;
+                const timeSelect = document.getElementById('newTime');
+
+                if (!date) {
+                    timeSelect.innerHTML = '<option value="">Select new date first</option>';
+                    return;
+                }
+
+                timeSelect.innerHTML = '<option value="">Loading...</option>';
+                timeSelect.disabled = true;
+
+                try {
+                    const response = await api.getTutorAvailability(tutorId, date);
+                    const { availableSlots } = response.data;
+
+                    timeSelect.innerHTML = '';
+                    timeSelect.disabled = false;
+
+                    if (availableSlots.length === 0) {
+                        timeSelect.innerHTML = '<option value="">No available slots</option>';
+                        return;
+                    }
+
+                    timeSelect.innerHTML = '<option value="">Select a time</option>';
+                    availableSlots.forEach(slot => {
+                        const option = document.createElement('option');
+                        option.value = slot;
+                        option.textContent = slot;
+                        timeSelect.appendChild(option);
+                    });
+
+                } catch (error) {
+                    console.error('Error loading availability:', error);
+                    timeSelect.innerHTML = '<option value="">Error loading times</option>';
+                    timeSelect.disabled = false;
+                }
+            });
+        });
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const sessionModal = document.getElementById('sessionDetailsModal');
+            const ratingModal = document.getElementById('ratingModal');
+            const rescheduleModal = document.getElementById('rescheduleModal');
+
+            if (event.target === sessionModal) {
+                closeSessionModal();
+            } else if (event.target === ratingModal) {
+                closeRatingModal();
+            } else if (event.target === rescheduleModal) {
+                closeRescheduleModal();
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug API</title>
+</head>
+<body>
+    <h1>Debug Bookings API</h1>
+    <button onclick="testAPI()">Test API</button>
+    <div id="output"></div>
+
+    <script src="assets/js/api.js"></script>
+    <script>
+        async function testAPI() {
+            try {
+                console.log('Testing API...');
+                const response = await api.getBookings();
+                console.log('Response:', response);
+
+                document.getElementById('output').innerHTML =
+                    '<pre>' + JSON.stringify(response, null, 2) + '</pre>';
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('output').innerHTML =
+                    '<div style="color: red;">Error: ' + error.message + '</div>';
+            }
+        }
+    </script>
+</body>
+</html>

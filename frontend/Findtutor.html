@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Tutors - SkillSync</title>
+    <link rel="stylesheet" href="assets/css/findtutor.css">
+    <script src="assets/js/api.js"></script>
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>SkillSync</h2>
+            </div>
+            <div class="nav-user">
+                <div class="user-info">
+                    <span class="user-name" id="userName">Loading...</span>
+                    <span class="user-role" id="userRole">Loading...</span>
+                </div>
+                <div class="nav-actions">
+                    <button class="btn-notifications">
+                        <span class="notification-icon">🔔</span>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <button class="btn-logout" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="dashboard.html" class="nav-link">
+                            <span class="nav-icon">📊</span>
+                            <span class="nav-text">Overview</span>
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a href="findtutor.html" class="nav-link">
+                            <span class="nav-icon">🔍</span>
+                            <span class="nav-text">Find Tutors</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="findsession.html" class="nav-link">
+                            <span class="nav-icon">📅</span>
+                            <span class="nav-text">My Sessions</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="profile.html" class="nav-link">
+                            <span class="nav-icon">👤</span>
+                            <span class="nav-text">Profile</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Find Tutors</h1>
+                <p>Discover tutors who can help you excel in your subjects</p>
+            </div>
+
+            <!-- Search and Filters -->
+            <div class="search-section">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search by subject or tutor name...">
+                    <button class="btn-search" onclick="searchTutors()">
+                        <span>🔍</span> Search
+                    </button>
+                </div>
+
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="subjectFilter">Subject</label>
+                        <select id="subjectFilter" onchange="filterTutors()">
+                            <option value="">All Subjects</option>
+                            <option value="mathematics">Mathematics</option>
+                            <option value="physics">Physics</option>
+                            <option value="chemistry">Chemistry</option>
+                            <option value="computer-science">Computer Science</option>
+                            <option value="english">English</option>
+                            <option value="biology">Biology</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="availabilityFilter">Availability</label>
+                        <select id="availabilityFilter" onchange="filterTutors()">
+                            <option value="">Any Time</option>
+                            <option value="available">Available Now</option>
+                            <option value="morning">Morning</option>
+                            <option value="afternoon">Afternoon</option>
+                            <option value="evening">Evening</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="ratingFilter">Min Rating</label>
+                        <select id="ratingFilter" onchange="filterTutors()">
+                            <option value="">Any Rating</option>
+                            <option value="4">4+ Stars</option>
+                            <option value="4.5">4.5+ Stars</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="sortFilter">Sort By</label>
+                        <select id="sortFilter" onchange="sortTutors()">
+                            <option value="rating">Highest Rating</option>
+                            <option value="reviews">Most Reviews</option>
+                            <option value="availability">Available Now</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Summary -->
+            <div class="results-summary">
+                <p><span id="resultCount">Loading...</span> tutors found</p>
+                <button class="btn-clear-filters" onclick="clearFilters()">Clear Filters</button>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-container">
+                <div class="loading-spinner"></div>
+                <p>Searching for tutors...</p>
+            </div>
+
+            <!-- Tutors Grid -->
+            <div class="tutors-grid" id="tutorsGrid">
+                <!-- Dynamic tutor cards will be populated here -->
+            </div>
+
+            <!-- No Results Message -->
+            <div id="noResults" class="no-results" style="display: none;">
+                <div class="no-results-content">
+                    <h3>No tutors found</h3>
+                    <p>Try adjusting your filters or search terms.</p>
+                    <button class="btn-clear-filters" onclick="clearFilters()">Clear All Filters</button>
+                </div>
+            </div>
+
+            <!-- Load More Button -->
+            <div class="load-more-section">
+                <button class="btn-load-more" onclick="loadMoreTutors()">Load More Tutors</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Book Session</h3>
+                <button class="modal-close" onclick="closeBookingModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="bookingForm">
+                    
+                    <div class="tutor-info" id="modalTutorInfo">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bookingSubject">Subject*</label>
+                        <select id="bookingSubject" required>
+                            <option value="">Select a subject</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bookingDate">Date*</label>
+                        <input type="date" id="bookingDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bookingTime">Time Slot*</label>
+                        <select id="bookingTime" required>
+                            <option value="">Select date first</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bookingDuration">Duration</label>
+                        <select id="bookingDuration">
+                            <option value="60">1 hour</option>
+                            <option value="90">1.5 hours</option>
+                            <option value="120">2 hours</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bookingLocation">Location</label>
+                        <select id="bookingLocation">
+                            <option value="Online">Online</option>
+                            <option value="Library">Library</option>
+                            <option value="Study Room">Study Room</option>
+                            <option value="Cafe">Cafe</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bookingMessage">Message (Optional)</label>
+                        <textarea id="bookingMessage" placeholder="Tell the tutor what you'd like to focus on in this session..." maxlength="500"></textarea>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn-cancel" onclick="closeBookingModal()">Cancel</button>
+                        <button type="submit" class="btn-book" id="submitBookingBtn">
+                            <span class="btn-text">Send Booking Request</span>
+                            <div class="btn-spinner" style="display: none;"></div>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Additional styles for dynamic content */
+        .loading-container {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 80px 20px;
+            color: #666;
+        }
+
+        .no-results h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        /* Tutor card styles are handled by external CSS file assets/css/findtutor.css */
+
+        /* Booking Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(2px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: #333;
+            font-size: 20px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .tutor-info {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .tutor-info .tutor-avatar {
+            width: 50px;
+            height: 50px;
+            font-size: 18px;
+        }
+
+        .tutor-info .tutor-details h4 {
+            margin: 0 0 4px 0;
+            color: #333;
+        }
+
+        .tutor-info .tutor-details p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .btn-cancel {
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+            background: white;
+            color: #666;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-cancel:hover {
+            background-color: #f5f5f5;
+            border-color: #999;
+        }
+
+        .btn-book {
+            padding: 10px 24px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-book:hover:not(:disabled) {
+            background: #0056b3;
+        }
+
+        .btn-book:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .availability-loading {
+            color: #666;
+            font-style: italic;
+        }
+
+        .no-availability {
+            color: #dc3545;
+            font-weight: 500;
+        }
+    </style>
+
+    <script>
+        // Global variables
+        let currentTutors = [];
+        let currentUser = null;
+        let currentPage = 1;
+        let isLoading = false;
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Check authentication
+            if (!auth.requireAuth()) {
+                return;
+            }
+
+            await initializePage();
+        });
+
+        async function initializePage() {
+            try {
+                // Load user info
+                currentUser = api.getUser();
+                if (currentUser) {
+                    document.getElementById('userName').textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+                    document.getElementById('userRole').textContent = currentUser.role === 'tutor' ? 'Tutor' : 'Learner';
+                }
+
+                // Load tutors
+                await loadTutors();
+
+                // Set up search debouncing
+                let searchTimeout;
+                document.getElementById('searchInput').addEventListener('input', function() {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        loadTutors();
+                    }, 500);
+                });
+
+            } catch (error) {
+                console.error('Error initializing page:', error);
+                showError('Failed to load tutors. Please refresh the page.');
+            }
+        }
+
+        async function loadTutors(resetPage = true) {
+            if (isLoading) return;
+            isLoading = true;
+
+            if (resetPage) {
+                currentPage = 1;
+            }
+
+            try {
+                showLoadingState();
+
+                // Get filter values
+                const params = new URLSearchParams({
+                    page: currentPage,
+                    limit: 20
+                });
+
+                const search = document.getElementById('searchInput').value.trim();
+                const subject = document.getElementById('subjectFilter').value;
+                const availability = document.getElementById('availabilityFilter').value;
+                const minRating = document.getElementById('ratingFilter').value;
+                const sortBy = document.getElementById('sortFilter').value;
+
+                if (search) params.append('search', search);
+                if (subject) params.append('subject', subject);
+                if (availability) params.append('availability', availability);
+                if (minRating) params.append('minRating', minRating);
+                if (sortBy) params.append('sortBy', sortBy);
+
+                const response = await fetch(`/api/tutors?${params}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    currentTutors = resetPage ? data.data : [...currentTutors, ...data.data];
+                    displayTutors(currentTutors);
+                    updateResultCount(data.count);
+
+                    // Show/hide load more button
+                    const loadMoreSection = document.querySelector('.load-more-section');
+                    if (data.currentPage < data.totalPages) {
+                        loadMoreSection.style.display = 'block';
+                    } else {
+                        loadMoreSection.style.display = 'none';
+                    }
+                } else {
+                    throw new Error(data.message);
+                }
+
+                hideLoadingState();
+
+            } catch (error) {
+                console.error('Error loading tutors:', error);
+                hideLoadingState();
+                showError('Failed to load tutors. Please try again.');
+            } finally {
+                isLoading = false;
+            }
+        }
+
+        function displayTutors(tutors) {
+            const grid = document.getElementById('tutorsGrid');
+            const noResults = document.getElementById('noResults');
+
+            if (tutors.length === 0) {
+                grid.style.display = 'none';
+                noResults.style.display = 'block';
+                return;
+            }
+
+            grid.style.display = 'grid';
+            noResults.style.display = 'none';
+
+            grid.innerHTML = tutors.map(tutor => createTutorCard(tutor)).join('');
+        }
+
+       
+
+        function createTutorCard(tutor) {
+            const initials = (tutor.firstName.charAt(0) + tutor.lastName.charAt(0)).toUpperCase();
+            const stars = '⭐'.repeat(Math.floor(tutor.stats.averageRating));
+            const availabilityClass = tutor.stats.isAvailable ? 'online' : 'busy';
+
+            return `
+                <div class="tutor-card">
+                    <div class="tutor-header">
+                        <div class="tutor-avatar">${initials}</div>
+                         <h3 class="name">${tutor.firstName} ${tutor.lastName}</h3>
+                        <div class="availability-badge ${availabilityClass}">
+                            ${tutor.stats.availabilityText}
+                        </div>
+                    </div>
+                    <div class="tutor-info">
+                       
+                        <p class="tutor-university">${tutor.university} - ${tutor.school || getYearText(tutor.year)}</p>
+                        <div class="tutor-subjects">
+                            ${tutor.subjects.slice(0, 3).map(subject =>
+                                `<span class="subject-tag">${formatSubject(subject)}</span>`
+                            ).join('')}
+                        </div>
+                        <div class="tutor-rating">
+                            <span class="stars">${stars}</span>
+                            <span class="rating-text">${tutor.stats.averageRating} (${tutor.stats.reviewCount} reviews)</span>
+                        </div>
+                        <p class="tutor-description">Available for personalized tutoring sessions.</p>
+                        <div class="tutor-stats">
+                           <!-- <span class="stat">📚 ${tutor.stats.totalSessions}+ sessions</span> -->
+                        </div>
+                    </div>
+                    <div class="tutor-actions">
+                        <button class="btn-view-profile" onclick="viewProfile('${tutor._id}')">View Profile</button>
+                        <button class="btn-book-session" onclick="bookSession('${tutor._id}')">
+                            ${tutor.stats.isAvailable ? 'Book Session' : 'Schedule Later'}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function formatSubject(subject) {
+            return subject.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        function getYearText(year) {
+            const yearMap = {
+                '1': '1st Year',
+                '2': '2nd Year',
+                '3': '3rd Year',
+                '4': '4th Year',
+                'graduate': 'Graduate Student'
+            };
+            return yearMap[year] || year;
+        }
+
+        function showLoadingState() {
+            document.getElementById('loadingState').style.display = 'block';
+            document.getElementById('tutorsGrid').style.display = 'none';
+            document.getElementById('noResults').style.display = 'none';
+        }
+
+        function hideLoadingState() {
+            document.getElementById('loadingState').style.display = 'none';
+        }
+
+        function updateResultCount(count) {
+            document.getElementById('resultCount').textContent = count;
+        }
+
+        function showError(message) {
+            alert(message); // Replace with a better error display later
+        }
+
+        // Event handlers
+        function searchTutors() {
+            loadTutors();
+        }
+
+        function filterTutors() {
+            loadTutors();
+        }
+
+        function sortTutors() {
+            loadTutors();
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('subjectFilter').value = '';
+            document.getElementById('availabilityFilter').value = '';
+            document.getElementById('ratingFilter').value = '';
+            document.getElementById('sortFilter').value = 'rating';
+            loadTutors();
+        }
+
+        function viewProfile(tutorId) {
+            // Navigate to tutor profile page (implement later)
+            alert('Tutor profile page will be implemented in next stage.');
+        }
+
+        async function bookSession(tutorId) {
+            // Find the tutor data
+            const tutor = currentTutors.find(t => t._id === tutorId);
+            if (!tutor) {
+                showError('Tutor not found');
+                return;
+            }
+
+            // Check if user is a learner
+            if (currentUser && currentUser.role === 'tutor') {
+                showError('Only learners can book sessions');
+                return;
+            }
+
+            await showBookingModal(tutor);
+        }
+
+        function loadMoreTutors() {
+            currentPage++;
+            loadTutors(false);
+        }
+
+        async function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                await auth.logout();
+            }
+        }
+
+        // Booking Modal Functions
+        let selectedTutor = null;
+
+        async function showBookingModal(tutor) {
+            selectedTutor = tutor;
+            const modal = document.getElementById('bookingModal');
+
+            // Populate tutor info
+            const modalTutorInfo = document.getElementById('modalTutorInfo');
+            const initials = (tutor.firstName.charAt(0) + tutor.lastName.charAt(0)).toUpperCase();
+
+            modalTutorInfo.innerHTML = `
+                <div class="tutor-avatar">${initials}</div>
+                <div class="tutor-details">
+                    <h4>${tutor.firstName} ${tutor.lastName}</h4>
+                    <p>${tutor.university} - ${tutor.school || getYearText(tutor.year)}</p>
+                </div>
+            `;
+
+            // Populate subjects
+            const subjectSelect = document.getElementById('bookingSubject');
+            subjectSelect.innerHTML = '<option value="">Select a subject</option>';
+            tutor.subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject;
+                option.textContent = formatSubject(subject);
+                subjectSelect.appendChild(option);
+            });
+
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('bookingDate').min = today;
+
+            // Reset form
+            document.getElementById('bookingForm').reset();
+            document.getElementById('bookingDuration').value = '60';
+            document.getElementById('bookingLocation').value = 'Online';
+
+            // Clear time slots
+            const timeSelect = document.getElementById('bookingTime');
+            timeSelect.innerHTML = '<option value="">Select date first</option>';
+
+            modal.style.display = 'block';
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').style.display = 'none';
+            selectedTutor = null;
+        }
+
+        // Load availability when date changes
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateInput = document.getElementById('bookingDate');
+            if (dateInput) {
+                dateInput.addEventListener('change', loadAvailability);
+            }
+        });
+
+        async function loadAvailability() {
+            const date = document.getElementById('bookingDate').value;
+            const timeSelect = document.getElementById('bookingTime');
+
+            if (!date || !selectedTutor) {
+                timeSelect.innerHTML = '<option value="">Select date first</option>';
+                return;
+            }
+
+            timeSelect.innerHTML = '<option value="">Loading...</option>';
+            timeSelect.disabled = true;
+
+            try {
+                const response = await api.getTutorAvailability(selectedTutor._id, date);
+                const { availableSlots, bookedSlots } = response.data;
+
+                timeSelect.innerHTML = '';
+                timeSelect.disabled = false;
+
+                if (availableSlots.length === 0) {
+                    timeSelect.innerHTML = '<option value="" class="no-availability">No available slots</option>';
+                    return;
+                }
+
+                timeSelect.innerHTML = '<option value="">Select a time</option>';
+                availableSlots.forEach(slot => {
+                    const option = document.createElement('option');
+                    option.value = slot;
+                    option.textContent = slot;
+                    timeSelect.appendChild(option);
+                });
+
+            } catch (error) {
+                console.error('Error loading availability:', error);
+                timeSelect.innerHTML = '<option value="">Error loading times</option>';
+                timeSelect.disabled = false;
+            }
+        }
+
+        // Handle booking form submission
+        document.addEventListener('DOMContentLoaded', function() {
+            const bookingForm = document.getElementById('bookingForm');
+            if (bookingForm) {
+                bookingForm.addEventListener('submit', handleBookingSubmit);
+            }
+        });
+
+        async function handleBookingSubmit(event) {
+            event.preventDefault();
+
+            const submitBtn = document.getElementById('submitBookingBtn');
+            const btnText = submitBtn.querySelector('.btn-text');
+            const btnSpinner = submitBtn.querySelector('.btn-spinner');
+
+            // Show loading state
+            submitBtn.disabled = true;
+            btnText.textContent = 'Sending Request...';
+            btnSpinner.style.display = 'block';
+
+            try {
+                const formData = new FormData(event.target);
+                const bookingData = {
+                    tutorId: selectedTutor._id,
+                    subject: document.getElementById('bookingSubject').value,
+                    date: document.getElementById('bookingDate').value,
+                    timeSlot: document.getElementById('bookingTime').value,
+                    duration: parseInt(document.getElementById('bookingDuration').value),
+                    location: document.getElementById('bookingLocation').value,
+                    message: document.getElementById('bookingMessage').value.trim()
+                };
+
+                const response = await api.createBooking(bookingData);
+
+                if (response.success) {
+                    closeBookingModal();
+                    showSuccess('Booking request sent successfully! The tutor will be notified.');
+                } else {
+                    throw new Error(response.message || 'Failed to create booking');
+                }
+
+            } catch (error) {
+                console.error('Booking error:', error);
+                showError(error.message || 'Failed to send booking request. Please try again.');
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                btnText.textContent = 'Send Booking Request';
+                btnSpinner.style.display = 'none';
+            }
+        }
+
+        function showSuccess(message) {
+            // Replace with a better notification system later
+            alert('✅ ' + message);
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('bookingModal');
+            if (event.target === modal) {
+                closeBookingModal();
+            }
+        }
+    </script>
+</body>
+</html>

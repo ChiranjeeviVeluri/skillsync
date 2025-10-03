@@ -1,0 +1,684 @@
+/* Find Tutors CSS - Coursera Color Palette */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-blue: #0056D3;
+    --secondary-blue: #0D47A1;
+    --light-blue: #E3F2FD;
+    --success-green: #00C851;
+    --warning-orange: #FF6F00;
+    --danger-red: #D32F2F;
+    --gray-text: #333333;
+    --light-gray: #F5F5F5;
+    --white: #FFFFFF;
+    --border-gray: #E0E0E0;
+    --hover-blue: #0041A3;
+    --sidebar-bg: #FAFAFA;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--light-gray);
+    line-height: 1.6;
+    color: var(--gray-text);
+}
+
+/* Navigation Header */
+.navbar {
+    background: var(--white);
+    border-bottom: 1px solid var(--border-gray);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+}
+
+.nav-logo h2 {
+    color: var(--primary-blue);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.nav-user {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.user-info {
+    text-align: right;
+}
+
+.user-name {
+    display: block;
+    font-weight: 600;
+    color: var(--gray-text);
+}
+
+.user-role {
+    display: block;
+    font-size: 0.85rem;
+    color: #666;
+    text-transform: capitalize;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-notifications {
+    position: relative;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.btn-notifications:hover {
+    background-color: var(--light-blue);
+}
+
+.notification-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: var(--danger-red);
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
+}
+
+.btn-logout {
+    background: var(--light-gray);
+    color: var(--gray-text);
+    border: 1px solid var(--border-gray);
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.btn-logout:hover {
+    background: var(--danger-red);
+    color: white;
+    border-color: var(--danger-red);
+}
+
+/* Main Container */
+.main-container {
+    display: flex;
+    min-height: calc(100vh - 70px);
+}
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border-gray);
+    padding: 20px 0;
+}
+
+.sidebar-nav .nav-menu {
+    list-style: none;
+    padding: 0;
+}
+
+.nav-item {
+    margin-bottom: 5px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 25px;
+    color: var(--gray-text);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-right: 3px solid transparent;
+}
+
+.nav-link:hover {
+    background: var(--light-blue);
+    color: var(--primary-blue);
+}
+
+.nav-item.active .nav-link {
+    background: var(--light-blue);
+    color: var(--primary-blue);
+    border-right-color: var(--primary-blue);
+}
+
+.nav-icon {
+    font-size: 1.2rem;
+    margin-right: 12px;
+    width: 20px;
+}
+
+.nav-text {
+    font-weight: 500;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+.page-header {
+    margin-bottom: 30px;
+}
+
+.page-header h1 {
+    color: var(--gray-text);
+    font-size: 2rem;
+    margin-bottom: 5px;
+}
+
+.page-header p {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+/* Search Section */
+.search-section {
+    background: var(--white);
+    padding: 25px;
+    border-radius: 12px;
+    border: 1px solid var(--border-gray);
+    margin-bottom: 25px;
+}
+
+.search-bar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 2px solid var(--border-gray);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.search-bar input:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    background-color: var(--light-blue);
+}
+
+.btn-search {
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-search:hover {
+    background: var(--hover-blue);
+}
+
+.filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-group label {
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--gray-text);
+    font-size: 0.9rem;
+}
+
+.filter-group select {
+    padding: 10px 12px;
+    border: 2px solid var(--border-gray);
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    background: var(--white);
+}
+
+.filter-group select:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+}
+
+/* Results Summary */
+.results-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding: 15px 0;
+}
+
+.results-summary p {
+    color: var(--gray-text);
+    font-weight: 500;
+}
+
+.btn-clear-filters {
+    background: none;
+    color: var(--primary-blue);
+    border: 1px solid var(--primary-blue);
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.btn-clear-filters:hover {
+    background: var(--primary-blue);
+    color: white;
+}
+
+/* Tutors Grid */
+.tutors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(580px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.tutor-card {
+    background: var(--white);
+    border: 1px solid var(--border-gray);
+    border-radius: 12px;
+    padding: 25px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.tutor-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 86, 211, 0.15);
+}
+
+.tutor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.tutor-avatar {
+    font-size: 2rem;
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--light-blue);
+    border-radius: 50%;
+    border: 2px solid var(--border-gray);
+    font-weight: bold;
+    color: var(--primary-blue);
+}
+
+.availability-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.availability-badge.online {
+    background: rgba(0, 200, 81, 0.1);
+    color: var(--success-green);
+    border: 1px solid var(--success-green);
+}
+
+.availability-badge.busy {
+    background: rgba(255, 111, 0, 0.1);
+    color: var(--warning-orange);
+    border: 1px solid var(--warning-orange);
+}
+
+.availability-badge.evening {
+    background: rgba(0, 86, 211, 0.1);
+    color: var(--primary-blue);
+    border: 1px solid var(--primary-blue);
+}
+
+.tutor-info h3 {
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+    color: var(--gray-text);
+    line-height: 1.3;
+}
+
+.tutor-university {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+}
+
+.tutor-subjects {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.subject-tag {
+    background: var(--light-blue);
+    color: var(--primary-blue);
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.tutor-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.stars {
+    color: var(--warning-orange);
+    font-size: 1rem;
+}
+
+.rating-text {
+    font-size: 0.85rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.tutor-description {
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+}
+
+.tutor-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding: 10px 0;
+    border-top: 1px solid var(--border-gray);
+}
+
+.stat {
+    font-size: 0.85rem;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.tutor-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.btn-view-profile,
+.btn-book-session {
+    flex: 1;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    text-align: center;
+    border: none;
+}
+
+.btn-view-profile {
+    background: var(--light-gray);
+    color: var(--gray-text);
+    border: 1px solid var(--border-gray);
+}
+
+.btn-view-profile:hover {
+    background: var(--light-blue);
+    border-color: var(--primary-blue);
+    color: var(--primary-blue);
+}
+
+.btn-book-session {
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+}
+
+.btn-book-session:hover {
+    background: var(--hover-blue);
+    transform: translateY(-1px);
+}
+
+/* Load More Section */
+.load-more-section {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.btn-load-more {
+    background: var(--white);
+    color: var(--primary-blue);
+    border: 2px solid var(--primary-blue);
+    padding: 12px 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.btn-load-more:hover {
+    background: var(--primary-blue);
+    color: white;
+}
+
+/* Modal Styles */
+.modal {
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+}
+
+.modal-content h3 {
+    margin-bottom: 15px;
+    color: var(--gray-text);
+}
+
+.modal-content button {
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .main-container {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        padding: 15px 0;
+    }
+    
+    .sidebar-nav .nav-menu {
+        display: flex;
+        overflow-x: auto;
+        padding: 0 15px;
+    }
+    
+    .nav-item {
+        margin-bottom: 0;
+        margin-right: 5px;
+        min-width: fit-content;
+    }
+    
+    .nav-link {
+        padding: 10px 15px;
+        border-right: none;
+        border-bottom: 3px solid transparent;
+        border-radius: 6px;
+        white-space: nowrap;
+    }
+    
+    .nav-item.active .nav-link {
+        border-bottom-color: var(--primary-blue);
+        border-right: none;
+    }
+    
+    .main-content {
+        padding: 20px 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .tutors-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .filters {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .search-bar {
+        flex-direction: column;
+    }
+    
+    .results-summary {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .tutor-header {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .tutor-avatar {
+        font-size: 3rem;
+        width: 70px;
+        height: 70px;
+    }
+    
+    .tutor-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .user-info {
+        display: none;
+    }
+    
+    .nav-container {
+        padding: 10px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-content {
+        padding: 15px 10px;
+    }
+    
+    .search-section {
+        padding: 20px 15px;
+    }
+    
+    .tutor-card {
+        padding: 20px 15px;
+    }
+    
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .tutor-stats {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .modal-content {
+        padding: 25px 20px;
+        margin: 0 10px;
+    }
+}
+
+
+.name{
+    left: -180px;
+    position: relative;
+    top: 10px;
+}
