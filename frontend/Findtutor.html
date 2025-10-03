@@ -164,8 +164,8 @@
             </div>
             <div class="modal-body">
                 <form id="bookingForm">
+                    
                     <div class="tutor-info" id="modalTutorInfo">
-                        <!-- Tutor info will be populated here -->
                     </div>
 
                     <div class="form-group">
@@ -579,6 +579,8 @@
             grid.innerHTML = tutors.map(tutor => createTutorCard(tutor)).join('');
         }
 
+       
+
         function createTutorCard(tutor) {
             const initials = (tutor.firstName.charAt(0) + tutor.lastName.charAt(0)).toUpperCase();
             const stars = '⭐'.repeat(Math.floor(tutor.stats.averageRating));
@@ -588,15 +590,16 @@
                 <div class="tutor-card">
                     <div class="tutor-header">
                         <div class="tutor-avatar">${initials}</div>
+                         <h3 class="name">${tutor.firstName} ${tutor.lastName}</h3>
                         <div class="availability-badge ${availabilityClass}">
                             ${tutor.stats.availabilityText}
                         </div>
                     </div>
                     <div class="tutor-info">
-                        <h3>${tutor.firstName} ${tutor.lastName}</h3>
+                       
                         <p class="tutor-university">${tutor.university} - ${tutor.school || getYearText(tutor.year)}</p>
                         <div class="tutor-subjects">
-                            ${tutor.subjects.map(subject =>
+                            ${tutor.subjects.slice(0, 3).map(subject =>
                                 `<span class="subject-tag">${formatSubject(subject)}</span>`
                             ).join('')}
                         </div>
@@ -604,10 +607,9 @@
                             <span class="stars">${stars}</span>
                             <span class="rating-text">${tutor.stats.averageRating} (${tutor.stats.reviewCount} reviews)</span>
                         </div>
-                        <p class="tutor-description">Expert in ${tutor.subjects.map(s => formatSubject(s)).join(', ')}. Available for personalized tutoring sessions.</p>
+                        <p class="tutor-description">Available for personalized tutoring sessions.</p>
                         <div class="tutor-stats">
-                            <span class="stat">📚 ${tutor.stats.totalSessions}+ sessions</span>
-                            <span class="stat">🎓 ${tutor.school || getYearText(tutor.year)}</span>
+                           <!-- <span class="stat">📚 ${tutor.stats.totalSessions}+ sessions</span> -->
                         </div>
                     </div>
                     <div class="tutor-actions">

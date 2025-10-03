@@ -87,6 +87,12 @@ const getBookings = async (req, res) => {
     const userId = req.user.id;
     const { status, upcoming } = req.query;
 
+    console.log('🔍 getBookings called:', {
+      userId,
+      userRole: req.user.role,
+      query: req.query
+    });
+
     // Build filter based on user role
     let filter = {};
     if (req.user.role === 'learner') {
@@ -94,6 +100,8 @@ const getBookings = async (req, res) => {
     } else if (req.user.role === 'tutor') {
       filter.tutor = userId;
     }
+
+    console.log('📊 Filter applied:', filter);
 
     // Add status filter if provided
     if (status) {
@@ -110,6 +118,9 @@ const getBookings = async (req, res) => {
       .populate('learner', 'firstName lastName email university school')
       .populate('tutor', 'firstName lastName email university school subjects')
       .sort({ date: 1, timeSlot: 1 });
+
+    console.log('📋 Found bookings:', bookings.length);
+    console.log('📋 Booking statuses:', bookings.map(b => b.status));
 
     res.json({
       success: true,

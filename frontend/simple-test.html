@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Test</title>
+</head>
+<body>
+    <h1>Simple Frontend Test</h1>
+    <button onclick="login()">1. Login</button>
+    <button onclick="loadAndDisplay()">2. Load & Display Bookings</button>
+
+    <div id="results"></div>
+    <div id="upcoming-list"></div>
+
+    <script src="assets/js/api.js"></script>
+    <script>
+        async function login() {
+            try {
+                await api.login('learner@university.edu', 'password123');
+                document.getElementById('results').innerHTML = '<p style="color: green;">✅ Logged in</p>';
+            } catch (error) {
+                document.getElementById('results').innerHTML = '<p style="color: red;">❌ Login failed: ' + error.message + '</p>';
+            }
+        }
+
+        async function loadAndDisplay() {
+            try {
+                const response = await api.getBookings();
+                const allBookings = response.data || [];
+
+                console.log('Total bookings:', allBookings.length);
+                console.log('Booking statuses:', allBookings.map(b => b.status));
+
+                const upcoming = allBookings.filter(b => b.status === 'accepted');
+                console.log('Upcoming bookings:', upcoming.length);
+
+                document.getElementById('results').innerHTML =
+                    '<p>Total: ' + allBookings.length + '</p>' +
+                    '<p>Upcoming (accepted): ' + upcoming.length + '</p>';
+
+                // Simple display
+                let html = '';
+                upcoming.forEach(booking => {
+                    html += '<div style="border: 1px solid #ccc; margin: 10px; padding: 10px;">';
+                    html += '<h3>' + booking.subject + '</h3>';
+                    html += '<p>Date: ' + booking.date + '</p>';
+                    html += '<p>Time: ' + booking.timeSlot + '</p>';
+                    html += '<p>Status: ' + booking.status + '</p>';
+                    html += '</div>';
+                });
+
+                document.getElementById('upcoming-list').innerHTML = html;
+
+            } catch (error) {
+                document.getElementById('results').innerHTML = '<p style="color: red;">❌ Error: ' + error.message + '</p>';
+            }
+        }
+    </script>
+</body>
+</html>

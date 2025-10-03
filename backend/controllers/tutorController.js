@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const Booking = require('../models/Booking');
+const Rating = require('../models/Rating');
 
 const getTutors = async (req, res) => {
   try {
@@ -46,22 +47,24 @@ const getTutors = async (req, res) => {
       const bookings = await Booking.find({ tutor: tutor._id });
       const completedSessions = bookings.filter(b => b.status === 'completed');
 
+      // Get real ratings from Rating model (only show actual captured ratings)
+      const ratings = await Rating.find({ tutor: tutor._id });
+      const totalRatings = ratings.length;
+      const sumRatings = ratings.reduce((sum, rating) => sum + rating.rating, 0);
+      const averageRating = totalRatings > 0 ? (sumRatings / totalRatings).toFixed(1) : '0.0';
+
       // Calculate stats
       const totalSessions = completedSessions.length;
-      const averageRating = totalSessions > 0 ?
-        (4.0 + Math.random() * 1.0).toFixed(1) : '0.0'; // Mock rating for now
 
-      // No pricing needed for free tutoring platform
-
-      // Determine availability status (mock for now)
-      const isAvailable = Math.random() > 0.3; // 70% chance of being available
+      // Simple availability (not random) - available by default
+      const isAvailable = true;
 
       return {
         ...tutor.toObject(),
         stats: {
           totalSessions,
           averageRating: parseFloat(averageRating),
-          reviewCount: totalSessions,
+          reviewCount: totalRatings,
           isAvailable,
           availabilityText: isAvailable ? 'Available Now' : 'Busy Until Later'
         }
@@ -133,20 +136,27 @@ const getTutorById = async (req, res) => {
     const bookings = await Booking.find({ tutor: tutor._id }).populate('learner', 'firstName lastName');
     const completedSessions = bookings.filter(b => b.status === 'completed');
 
-    // Calculate detailed stats
-    const totalSessions = completedSessions.length;
-    const averageRating = totalSessions > 0 ?
-      (4.0 + Math.random() * 1.0).toFixed(1) : '0.0';
-    const isAvailable = Math.random() > 0.3;
+    // Get real ratings and reviews
+    const ratings = await Rating.find({ tutor: tutor._id })
+      .populate('rater', 'firstName lastName')
+      .populate('booking', 'subject createdAt')
+      .sort({ createdAt: -1 });
 
-    // Get recent reviews (mock data for now)
-    const recentReviews = completedSessions.slice(0, 5).map(booking => ({
-      id: booking._id,
-      studentName: `${booking.learner.firstName} ${booking.learner.lastName}`,
-      rating: 4 + Math.random(),
-      comment: `Great session on ${booking.subject}. Very helpful!`,
-      date: booking.createdAt,
-      subject: booking.subject
+    const totalRatings = ratings.length;
+    const sumRatings = ratings.reduce((sum, rating) => sum + rating.rating, 0);
+    const averageRating = totalRatings > 0 ? (sumRatings / totalRatings).toFixed(1) : '0.0';
+
+    // Simple availability (not based on random or complex logic)
+    const isAvailable = true;
+
+    // Get recent reviews from actual ratings
+    const recentReviews = ratings.slice(0, 5).map(rating => ({
+      id: rating._id,
+      studentName: `${rating.rater.firstName} ${rating.rater.lastName}`,
+      rating: rating.rating,
+      comment: rating.review || 'Great session!',
+      date: rating.createdAt,
+      subject: rating.subject
     }));
 
     // Get unique students count
@@ -157,7 +167,7 @@ const getTutorById = async (req, res) => {
       stats: {
         totalSessions,
         averageRating: parseFloat(averageRating),
-        reviewCount: totalSessions,
+        reviewCount: totalRatings,
         uniqueStudents: uniqueStudents.length,
         isAvailable,
         availabilityText: isAvailable ? 'Available Now' : 'Busy Until Later',

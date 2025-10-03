@@ -140,6 +140,23 @@ class APIService {
         return await this.makeRequest(`/api/bookings/availability?tutorId=${tutorId}&date=${date}`);
     }
 
+    // Rating methods
+    async submitRating(bookingId, rating, review = '') {
+        return await this.makeRequest('/api/ratings', {
+            method: 'POST',
+            body: JSON.stringify({ bookingId, rating, review })
+        });
+    }
+
+    async getRatings(tutorId = null) {
+        const endpoint = tutorId ? `/api/ratings?tutorId=${tutorId}` : '/api/ratings';
+        return await this.makeRequest(endpoint);
+    }
+
+    async getTutorRatingStats(tutorId) {
+        return await this.makeRequest(`/api/ratings/tutor/${tutorId}/stats`);
+    }
+
     // Utility methods
     isAuthenticated() {
         return !!this.token && !!localStorage.getItem('user');

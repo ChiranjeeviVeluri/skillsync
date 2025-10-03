@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Sessions</title>
+</head>
+<body>
+    <h1>Test Sessions Loading</h1>
+    <button onclick="testLogin()">1. Login as Learner</button>
+    <button onclick="testLoadBookings()">2. Load Bookings</button>
+    <div id="output"></div>
+
+    <script src="assets/js/api.js"></script>
+    <script>
+        let allBookings = [];
+
+        async function testLogin() {
+            try {
+                console.log('Logging in...');
+                const response = await api.login('learner@university.edu', 'password123');
+                console.log('Login response:', response);
+                document.getElementById('output').innerHTML =
+                    '<p style="color: green;">✅ Login successful</p>';
+            } catch (error) {
+                console.error('Login error:', error);
+                document.getElementById('output').innerHTML =
+                    '<p style="color: red;">❌ Login failed: ' + error.message + '</p>';
+            }
+        }
+
+        async function testLoadBookings() {
+            try {
+                console.log('Loading bookings...');
+                const response = await api.getBookings();
+                console.log('Raw API response:', response);
+                allBookings = response.data || [];
+                console.log('All bookings array:', allBookings);
+                console.log('All booking statuses:', allBookings.map(b => b.status));
+
+                // Filter for upcoming bookings (status: accepted)
+                const upcoming = allBookings.filter(b => b.status === 'accepted');
+                console.log('Filtered upcoming bookings:', upcoming);
+                console.log('Upcoming bookings count:', upcoming.length);
+
+                document.getElementById('output').innerHTML =
+                    '<p>✅ Loaded ' + allBookings.length + ' total bookings</p>' +
+                    '<p>📋 Found ' + upcoming.length + ' upcoming bookings (status=accepted)</p>' +
+                    '<pre>' + JSON.stringify(upcoming, null, 2) + '</pre>';
+            } catch (error) {
+                console.error('Load bookings error:', error);
+                document.getElementById('output').innerHTML =
+                    '<p style="color: red;">❌ Load failed: ' + error.message + '</p>';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -27,6 +27,7 @@ app.use('/api/tutors', require('./routes/tutors'));
 app.use('/api/bookings', require('./routes/bookings'));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
+app.use('/api/ratings', require('./routes/ratings'));
 
 // Dashboard route
 app.get('/dashboard', (req, res) => {
