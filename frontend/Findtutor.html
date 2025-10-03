@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Find Tutors - SkillSync</title>
     <link rel="stylesheet" href="assets/css/findtutor.css">
+    <script src="assets/js/api.js"></script>
 </head>
 <body>
     <!-- Navigation Header -->
@@ -15,8 +16,8 @@
             </div>
             <div class="nav-user">
                 <div class="user-info">
-                    <span class="user-name">John Doe</span>
-                    <span class="user-role">Learner</span>
+                    <span class="user-name" id="userName">Loading...</span>
+                    <span class="user-role" id="userRole">Loading...</span>
                 </div>
                 <div class="nav-actions">
                     <button class="btn-notifications">
@@ -123,122 +124,27 @@
 
             <!-- Results Summary -->
             <div class="results-summary">
-                <p><span id="resultCount">12</span> tutors found</p>
+                <p><span id="resultCount">Loading...</span> tutors found</p>
                 <button class="btn-clear-filters" onclick="clearFilters()">Clear Filters</button>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-container">
+                <div class="loading-spinner"></div>
+                <p>Searching for tutors...</p>
             </div>
 
             <!-- Tutors Grid -->
             <div class="tutors-grid" id="tutorsGrid">
-                <div class="tutor-card" data-subject="mathematics" data-rating="4.9" data-availability="available">
-                    <div class="tutor-header">
-                        <div class="tutor-avatar">👩‍🎓</div>
-                        <div class="availability-badge online">Available Now</div>
-                    </div>
-                    <div class="tutor-info">
-                        <h3>Sarah Johnson</h3>
-                        <p class="tutor-university">State University - 3rd Year Engineering</p>
-                        <div class="tutor-subjects">
-                            <span class="subject-tag">Mathematics</span>
-                            <span class="subject-tag">Physics</span>
-                        </div>
-                        <div class="tutor-rating">
-                            <div class="stars">⭐⭐⭐⭐⭐</div>
-                            <span class="rating-text">4.9 (23 reviews)</span>
-                        </div>
-                        <p class="tutor-description">Specializing in calculus, algebra, and mechanics. Patient teaching style with proven results.</p>
-                        <div class="tutor-stats">
-                            <span class="stat">📚 45+ sessions</span>
-                            <span class="stat">💰 $25/hour</span>
-                        </div>
-                    </div>
-                    <div class="tutor-actions">
-                        <button class="btn-view-profile" onclick="viewProfile('sarah-johnson')">View Profile</button>
-                        <button class="btn-book-session" onclick="bookSession('sarah-johnson')">Book Session</button>
-                    </div>
-                </div>
+                <!-- Dynamic tutor cards will be populated here -->
+            </div>
 
-                <div class="tutor-card" data-subject="computer-science" data-rating="4.8" data-availability="busy">
-                    <div class="tutor-header">
-                        <div class="tutor-avatar">👨‍💻</div>
-                        <div class="availability-badge busy">Busy Until 3 PM</div>
-                    </div>
-                    <div class="tutor-info">
-                        <h3>Mike Chen</h3>
-                        <p class="tutor-university">Tech University - Graduate Student</p>
-                        <div class="tutor-subjects">
-                            <span class="subject-tag">Computer Science</span>
-                            <span class="subject-tag">Mathematics</span>
-                        </div>
-                        <div class="tutor-rating">
-                            <div class="stars">⭐⭐⭐⭐⭐</div>
-                            <span class="rating-text">4.8 (31 reviews)</span>
-                        </div>
-                        <p class="tutor-description">Expert in algorithms, data structures, and programming. Great at breaking down complex concepts.</p>
-                        <div class="tutor-stats">
-                            <span class="stat">📚 68+ sessions</span>
-                            <span class="stat">💰 $30/hour</span>
-                        </div>
-                    </div>
-                    <div class="tutor-actions">
-                        <button class="btn-view-profile" onclick="viewProfile('mike-chen')">View Profile</button>
-                        <button class="btn-book-session" onclick="bookSession('mike-chen')">Schedule Later</button>
-                    </div>
-                </div>
-
-                <div class="tutor-card" data-subject="chemistry" data-rating="4.7" data-availability="available">
-                    <div class="tutor-header">
-                        <div class="tutor-avatar">👩‍🔬</div>
-                        <div class="availability-badge online">Available Now</div>
-                    </div>
-                    <div class="tutor-info">
-                        <h3>Emma Davis</h3>
-                        <p class="tutor-university">Medical College - 4th Year</p>
-                        <div class="tutor-subjects">
-                            <span class="subject-tag">Chemistry</span>
-                            <span class="subject-tag">Biology</span>
-                        </div>
-                        <div class="tutor-rating">
-                            <div class="stars">⭐⭐⭐⭐⭐</div>
-                            <span class="rating-text">4.7 (18 reviews)</span>
-                        </div>
-                        <p class="tutor-description">Strong background in organic chemistry and biochemistry. Excellent at exam preparation.</p>
-                        <div class="tutor-stats">
-                            <span class="stat">📚 32+ sessions</span>
-                            <span class="stat">💰 $28/hour</span>
-                        </div>
-                    </div>
-                    <div class="tutor-actions">
-                        <button class="btn-view-profile" onclick="viewProfile('emma-davis')">View Profile</button>
-                        <button class="btn-book-session" onclick="bookSession('emma-davis')">Book Session</button>
-                    </div>
-                </div>
-
-                <div class="tutor-card" data-subject="physics" data-rating="4.6" data-availability="evening">
-                    <div class="tutor-header">
-                        <div class="tutor-avatar">👨‍🔬</div>
-                        <div class="availability-badge evening">Available 6 PM</div>
-                    </div>
-                    <div class="tutor-info">
-                        <h3>Alex Rodriguez</h3>
-                        <p class="tutor-university">Engineering University - PhD Student</p>
-                        <div class="tutor-subjects">
-                            <span class="subject-tag">Physics</span>
-                            <span class="subject-tag">Mathematics</span>
-                        </div>
-                        <div class="tutor-rating">
-                            <div class="stars">⭐⭐⭐⭐⭐</div>
-                            <span class="rating-text">4.6 (15 reviews)</span>
-                        </div>
-                        <p class="tutor-description">PhD in theoretical physics. Specializes in quantum mechanics and thermodynamics.</p>
-                        <div class="tutor-stats">
-                            <span class="stat">📚 28+ sessions</span>
-                            <span class="stat">💰 $35/hour</span>
-                        </div>
-                    </div>
-                    <div class="tutor-actions">
-                        <button class="btn-view-profile" onclick="viewProfile('alex-rodriguez')">View Profile</button>
-                        <button class="btn-book-session" onclick="bookSession('alex-rodriguez')">Book Session</button>
-                    </div>
+            <!-- No Results Message -->
+            <div id="noResults" class="no-results" style="display: none;">
+                <div class="no-results-content">
+                    <h3>No tutors found</h3>
+                    <p>Try adjusting your filters or search terms.</p>
+                    <button class="btn-clear-filters" onclick="clearFilters()">Clear All Filters</button>
                 </div>
             </div>
 
@@ -258,21 +164,291 @@
         </div>
     </div>
 
+    <style>
+        /* Additional styles for dynamic content */
+        .loading-container {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 80px 20px;
+            color: #666;
+        }
+
+        .no-results h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .tutor-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: bold;
+        }
+
+        .availability-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .availability-badge.online {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .availability-badge.busy {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .subject-tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-right: 6px;
+            margin-bottom: 4px;
+            display: inline-block;
+        }
+
+        .stars {
+            color: #ffc107;
+            margin-right: 8px;
+        }
+    </style>
+
     <script>
+        // Global variables
+        let currentTutors = [];
+        let currentUser = null;
+        let currentPage = 1;
+        let isLoading = false;
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Check authentication
+            if (!auth.requireAuth()) {
+                return;
+            }
+
+            await initializePage();
+        });
+
+        async function initializePage() {
+            try {
+                // Load user info
+                currentUser = api.getUser();
+                if (currentUser) {
+                    document.getElementById('userName').textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+                    document.getElementById('userRole').textContent = currentUser.role === 'tutor' ? 'Tutor' : 'Learner';
+                }
+
+                // Load tutors
+                await loadTutors();
+
+                // Set up search debouncing
+                let searchTimeout;
+                document.getElementById('searchInput').addEventListener('input', function() {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        loadTutors();
+                    }, 500);
+                });
+
+            } catch (error) {
+                console.error('Error initializing page:', error);
+                showError('Failed to load tutors. Please refresh the page.');
+            }
+        }
+
+        async function loadTutors(resetPage = true) {
+            if (isLoading) return;
+            isLoading = true;
+
+            if (resetPage) {
+                currentPage = 1;
+            }
+
+            try {
+                showLoadingState();
+
+                // Get filter values
+                const params = new URLSearchParams({
+                    page: currentPage,
+                    limit: 20
+                });
+
+                const search = document.getElementById('searchInput').value.trim();
+                const subject = document.getElementById('subjectFilter').value;
+                const availability = document.getElementById('availabilityFilter').value;
+                const minRating = document.getElementById('ratingFilter').value;
+                const sortBy = document.getElementById('sortFilter').value;
+
+                if (search) params.append('search', search);
+                if (subject) params.append('subject', subject);
+                if (availability) params.append('availability', availability);
+                if (minRating) params.append('minRating', minRating);
+                if (sortBy) params.append('sortBy', sortBy);
+
+                const response = await fetch(`/api/tutors?${params}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    currentTutors = resetPage ? data.data : [...currentTutors, ...data.data];
+                    displayTutors(currentTutors);
+                    updateResultCount(data.count);
+
+                    // Show/hide load more button
+                    const loadMoreSection = document.querySelector('.load-more-section');
+                    if (data.currentPage < data.totalPages) {
+                        loadMoreSection.style.display = 'block';
+                    } else {
+                        loadMoreSection.style.display = 'none';
+                    }
+                } else {
+                    throw new Error(data.message);
+                }
+
+                hideLoadingState();
+
+            } catch (error) {
+                console.error('Error loading tutors:', error);
+                hideLoadingState();
+                showError('Failed to load tutors. Please try again.');
+            } finally {
+                isLoading = false;
+            }
+        }
+
+        function displayTutors(tutors) {
+            const grid = document.getElementById('tutorsGrid');
+            const noResults = document.getElementById('noResults');
+
+            if (tutors.length === 0) {
+                grid.style.display = 'none';
+                noResults.style.display = 'block';
+                return;
+            }
+
+            grid.style.display = 'grid';
+            noResults.style.display = 'none';
+
+            grid.innerHTML = tutors.map(tutor => createTutorCard(tutor)).join('');
+        }
+
+        function createTutorCard(tutor) {
+            const initials = (tutor.firstName.charAt(0) + tutor.lastName.charAt(0)).toUpperCase();
+            const stars = '⭐'.repeat(Math.floor(tutor.stats.averageRating));
+            const availabilityClass = tutor.stats.isAvailable ? 'online' : 'busy';
+
+            return `
+                <div class="tutor-card" data-tutor-id="${tutor._id}">
+                    <div class="tutor-header">
+                        <div class="tutor-avatar">${initials}</div>
+                        <div class="availability-badge ${availabilityClass}">
+                            ${tutor.stats.availabilityText}
+                        </div>
+                    </div>
+                    <div class="tutor-info">
+                        <h3>${tutor.firstName} ${tutor.lastName}</h3>
+                        <p class="tutor-university">${tutor.university} - ${getYearText(tutor.year)}</p>
+                        <div class="tutor-subjects">
+                            ${tutor.subjects.map(subject =>
+                                `<span class="subject-tag">${formatSubject(subject)}</span>`
+                            ).join('')}
+                        </div>
+                        <div class="tutor-rating">
+                            <div class="stars">${stars}</div>
+                            <span class="rating-text">${tutor.stats.averageRating} (${tutor.stats.reviewCount} reviews)</span>
+                        </div>
+                        <p class="tutor-description">Expert in ${tutor.subjects.map(s => formatSubject(s)).join(', ')}. Available for personalized tutoring sessions.</p>
+                        <div class="tutor-stats">
+                            <span class="stat">📚 ${tutor.stats.totalSessions}+ sessions</span>
+                            <span class="stat">💰 $${tutor.stats.hourlyRate}/hour</span>
+                        </div>
+                    </div>
+                    <div class="tutor-actions">
+                        <button class="btn-view-profile" onclick="viewProfile('${tutor._id}')">View Profile</button>
+                        <button class="btn-book-session" onclick="bookSession('${tutor._id}')">
+                            ${tutor.stats.isAvailable ? 'Book Session' : 'Schedule Later'}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function formatSubject(subject) {
+            return subject.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        function getYearText(year) {
+            const yearMap = {
+                '1': '1st Year',
+                '2': '2nd Year',
+                '3': '3rd Year',
+                '4': '4th Year',
+                'graduate': 'Graduate Student'
+            };
+            return yearMap[year] || year;
+        }
+
+        function showLoadingState() {
+            document.getElementById('loadingState').style.display = 'block';
+            document.getElementById('tutorsGrid').style.display = 'none';
+            document.getElementById('noResults').style.display = 'none';
+        }
+
+        function hideLoadingState() {
+            document.getElementById('loadingState').style.display = 'none';
+        }
+
+        function updateResultCount(count) {
+            document.getElementById('resultCount').textContent = count;
+        }
+
+        function showError(message) {
+            alert(message); // Replace with a better error display later
+        }
+
+        // Event handlers
         function searchTutors() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            // Search functionality will be connected to backend
-            console.log('Searching for:', searchTerm);
+            loadTutors();
         }
 
         function filterTutors() {
-            // Filter functionality will be connected to backend
-            console.log('Filtering tutors...');
+            loadTutors();
         }
 
         function sortTutors() {
-            // Sort functionality will be connected to backend
-            console.log('Sorting tutors...');
+            loadTutors();
         }
 
         function clearFilters() {
@@ -281,32 +457,32 @@
             document.getElementById('availabilityFilter').value = '';
             document.getElementById('ratingFilter').value = '';
             document.getElementById('sortFilter').value = 'rating';
-            filterTutors();
+            loadTutors();
         }
 
         function viewProfile(tutorId) {
-            alert('Viewing profile for ' + tutorId + '. Profile modal will be implemented.');
+            // Navigate to tutor profile page (implement later)
+            alert('Tutor profile page will be implemented in next stage.');
         }
 
         function bookSession(tutorId) {
-            document.getElementById('bookingModal').style.display = 'block';
-            console.log('Booking session with:', tutorId);
+            // Navigate to booking page (implement later)
+            alert('Session booking will be implemented in next stage.');
+        }
+
+        function loadMoreTutors() {
+            currentPage++;
+            loadTutors(false);
+        }
+
+        async function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                await auth.logout();
+            }
         }
 
         function closeModal() {
             document.getElementById('bookingModal').style.display = 'none';
-        }
-
-        function loadMoreTutors() {
-            // Load more functionality will be connected to backend
-            console.log('Loading more tutors...');
-        }
-
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('userRole');
-                window.location.href = 'login.html';
-            }
         }
 
         // Close modal when clicking outside

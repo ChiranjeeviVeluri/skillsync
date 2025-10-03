@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - SkillSync</title>
     <link rel="stylesheet" href="assets/css/login.css">
+    <script src="assets/js/api.js"></script>
 </head>
 <body>
     <div class="container">
@@ -61,8 +62,40 @@
             </div>
         </div>
     </div>
-    
+
+    <!-- Loading overlay -->
+    <div id="loadingOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">
+        <div style="background: white; padding: 20px; border-radius: 8px; text-align: center;">
+            <div style="margin-bottom: 10px;">Loading...</div>
+            <div style="width: 30px; height: 30px; border: 3px solid #f3f3f3; border-top: 3px solid #007bff; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+        </div>
+    </div>
+
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+            display: block;
+        }
+        #loadingOverlay {
+            display: none !important;
+        }
+        #loadingOverlay.show {
+            display: flex !important;
+        }
+    </style>
+
     <script>
+        // Check if user is already logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            auth.redirectIfAuthenticated();
+        });
+
         function fillTestAccount(type) {
             if (type === 'learner') {
                 document.getElementById('email').value = 'learner@university.edu';
@@ -72,12 +105,83 @@
                 document.getElementById('password').value = 'password123';
             }
         }
-        
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+
+        function showError(fieldId, message) {
+            const errorElement = document.getElementById(fieldId + 'Error');
+            if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+            }
+        }
+
+        function clearErrors() {
+            const errorElements = document.querySelectorAll('.error-message');
+            errorElements.forEach(element => {
+                element.textContent = '';
+                element.style.display = 'none';
+            });
+        }
+
+        function showLoading(show = true) {
+            const overlay = document.getElementById('loadingOverlay');
+            if (show) {
+                overlay.classList.add('show');
+            } else {
+                overlay.classList.remove('show');
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            // This will be connected to backend later
-            alert('Login functionality will be connected to backend');
-            window.location.href = 'dashboard.html';
+
+            // Clear previous errors
+            clearErrors();
+
+            // Get form data
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            // Basic validation
+            if (!email) {
+                showError('email', 'Email is required');
+                return;
+            }
+
+            if (!password) {
+                showError('password', 'Password is required');
+                return;
+            }
+
+            // Show loading
+            showLoading(true);
+
+            try {
+                // Attempt login
+                const response = await api.login(email, password);
+
+                // Success - redirect to dashboard
+                if (response.user) {
+                    window.location.href = '/dashboard.html';
+                } else {
+                    throw new Error('Login successful but no user data received');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+
+                // Show appropriate error message
+                if (error.message.includes('Invalid credentials') || error.message.includes('401')) {
+                    showError('password', 'Invalid email or password');
+                } else if (error.message.includes('User not found') || error.message.includes('404')) {
+                    showError('email', 'No account found with this email');
+                } else if (error.message.includes('network') || error.message.includes('fetch')) {
+                    showError('email', 'Connection error. Please check your internet connection.');
+                } else {
+                    showError('email', error.message || 'An error occurred during login. Please try again.');
+                }
+            } finally {
+                // Hide loading
+                showLoading(false);
+            }
         });
     </script>
 </body>
