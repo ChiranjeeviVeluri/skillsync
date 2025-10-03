@@ -1,0 +1,19 @@
+{
+  "name": "skillsync-backend",
+  "version": "1.0.0",
+  "description": "SkillSync Backend - Peer Tutoring Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "nodemon backend/server.js",
+    "backend": "nodemon backend/server.js",
+    "frontend": "cd frontend && python -m http.server 3000",
+    "test-db": "node config/testdb.js"
+  },
+  "dependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - SkillSync</title>
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>SkillSync</h2>
+            </div>
+            <div class="nav-user">
+                <div class="user-info">
+                    <span class="user-name">John Doe</span>
+                    <span class="user-role" id="userRole">Learner</span>
+                </div>
+                <div class="nav-actions">
+                    <button class="btn-notifications" id="notificationsBtn">
+                        <span class="notification-icon">🔔</span>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <button class="btn-logout" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dashboard Container -->
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <ul class="nav-menu">
+                    <li class="nav-item active">
+                        <a href="dashboard.html" class="nav-link">
+                            <span class="nav-icon">📊</span>
+                            <span class="nav-text">Overview</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="findTutorsNav">
+                        <a href="findtutor.html" class="nav-link">
+                            <span class="nav-icon">🔍</span>
+                            <span class="nav-text">Find Tutors</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="mySessionsNav">
+                        <a href="findsession.html" class="nav-link">
+                            <span class="nav-icon">📅</span>
+                            <span class="nav-text">My Sessions</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="tutorDashboardNav" style="display: none;">
+                        <a href="tutor-dashboard.html" class="nav-link">
+                            <span class="nav-icon">👨‍🏫</span>
+                            <span class="nav-text">Tutor Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="profile.html" class="nav-link">
+                            <span class="nav-icon">👤</span>
+                            <span class="nav-text">Profile</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Overview Section -->
+            <section class="content-section">
+                <div class="section-header">
+                    <h1>Welcome back, <span id="welcomeName">John</span>!</h1>
+                    <p>Here's what's happening with your learning journey</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📚</div>
+                        <div class="stat-info">
+                            <h3 id="totalSessions">12</h3>
+                            <p>Total Sessions</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-info">
+                            <h3 id="avgRating">4.8</h3>
+                            <p>Average Rating</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🕐</div>
+                        <div class="stat-info">
+                            <h3 id="hoursLearned">24</h3>
+                            <p>Hours Learned</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-info">
+                            <h3 id="subjectsCount">3</h3>
+                            <p>Subjects</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h2>Recent Activity</h2>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon">✅</div>
+                            <div class="activity-content">
+                                <h4>Session Completed</h4>
+                                <p>Mathematics session with Sarah Johnson</p>
+                                <span class="activity-time">2 hours ago</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">📅</div>
+                            <div class="activity-content">
+                                <h4>Session Booked</h4>
+                                <p>Physics session with Mike Chen scheduled for tomorrow</p>
+                                <span class="activity-time">1 day ago</span>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">⭐</div>
+                            <div class="activity-content">
+                                <h4>Rating Given</h4>
+                                <p>You rated Chemistry session with Emma Davis</p>
+                                <span class="activity-time">3 days ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <h2>Quick Actions</h2>
+                    <div class="actions-grid">
+                        <a href="findtutor.html" class="action-card">
+                            <div class="action-icon">🔍</div>
+                            <h3>Find a Tutor</h3>
+                            <p>Browse available tutors and book sessions</p>
+                        </a>
+                        <a href="findsession.html" class="action-card">
+                            <div class="action-icon">📅</div>
+                            <h3>My Sessions</h3>
+                            <p>View and manage your tutoring sessions</p>
+                        </a>
+                        <a href="profile.html" class="action-card">
+                            <div class="action-icon">👤</div>
+                            <h3>Update Profile</h3>
+                            <p>Manage your account and preferences</p>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('userRole');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Initialize dashboard based on user role
+        function initializeDashboard() {
+            const userRole = localStorage.getItem('userRole') || 'learner';
+            document.getElementById('userRole').textContent = userRole === 'tutor' ? 'Tutor' : 'Learner';
+            
+            if (userRole === 'tutor') {
+                document.getElementById('tutorDashboardNav').style.display = 'block';
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializeDashboard);
+    </script>
+</body>
+</html>

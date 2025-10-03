@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Tutors - SkillSync</title>
+    <link rel="stylesheet" href="assets/css/findtutor.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>SkillSync</h2>
+            </div>
+            <div class="nav-user">
+                <div class="user-info">
+                    <span class="user-name">John Doe</span>
+                    <span class="user-role">Learner</span>
+                </div>
+                <div class="nav-actions">
+                    <button class="btn-notifications">
+                        <span class="notification-icon">🔔</span>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <button class="btn-logout" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="dashboard.html" class="nav-link">
+                            <span class="nav-icon">📊</span>
+                            <span class="nav-text">Overview</span>
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a href="findtutor.html" class="nav-link">
+                            <span class="nav-icon">🔍</span>
+                            <span class="nav-text">Find Tutors</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="findsession.html" class="nav-link">
+                            <span class="nav-icon">📅</span>
+                            <span class="nav-text">My Sessions</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="profile.html" class="nav-link">
+                            <span class="nav-icon">👤</span>
+                            <span class="nav-text">Profile</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Find Tutors</h1>
+                <p>Discover tutors who can help you excel in your subjects</p>
+            </div>
+
+            <!-- Search and Filters -->
+            <div class="search-section">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search by subject or tutor name...">
+                    <button class="btn-search" onclick="searchTutors()">
+                        <span>🔍</span> Search
+                    </button>
+                </div>
+
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="subjectFilter">Subject</label>
+                        <select id="subjectFilter" onchange="filterTutors()">
+                            <option value="">All Subjects</option>
+                            <option value="mathematics">Mathematics</option>
+                            <option value="physics">Physics</option>
+                            <option value="chemistry">Chemistry</option>
+                            <option value="computer-science">Computer Science</option>
+                            <option value="english">English</option>
+                            <option value="biology">Biology</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="availabilityFilter">Availability</label>
+                        <select id="availabilityFilter" onchange="filterTutors()">
+                            <option value="">Any Time</option>
+                            <option value="available">Available Now</option>
+                            <option value="morning">Morning</option>
+                            <option value="afternoon">Afternoon</option>
+                            <option value="evening">Evening</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="ratingFilter">Min Rating</label>
+                        <select id="ratingFilter" onchange="filterTutors()">
+                            <option value="">Any Rating</option>
+                            <option value="4">4+ Stars</option>
+                            <option value="4.5">4.5+ Stars</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="sortFilter">Sort By</label>
+                        <select id="sortFilter" onchange="sortTutors()">
+                            <option value="rating">Highest Rating</option>
+                            <option value="reviews">Most Reviews</option>
+                            <option value="availability">Available Now</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Summary -->
+            <div class="results-summary">
+                <p><span id="resultCount">12</span> tutors found</p>
+                <button class="btn-clear-filters" onclick="clearFilters()">Clear Filters</button>
+            </div>
+
+            <!-- Tutors Grid -->
+            <div class="tutors-grid" id="tutorsGrid">
+                <div class="tutor-card" data-subject="mathematics" data-rating="4.9" data-availability="available">
+                    <div class="tutor-header">
+                        <div class="tutor-avatar">👩‍🎓</div>
+                        <div class="availability-badge online">Available Now</div>
+                    </div>
+                    <div class="tutor-info">
+                        <h3>Sarah Johnson</h3>
+                        <p class="tutor-university">State University - 3rd Year Engineering</p>
+                        <div class="tutor-subjects">
+                            <span class="subject-tag">Mathematics</span>
+                            <span class="subject-tag">Physics</span>
+                        </div>
+                        <div class="tutor-rating">
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                            <span class="rating-text">4.9 (23 reviews)</span>
+                        </div>
+                        <p class="tutor-description">Specializing in calculus, algebra, and mechanics. Patient teaching style with proven results.</p>
+                        <div class="tutor-stats">
+                            <span class="stat">📚 45+ sessions</span>
+                            <span class="stat">💰 $25/hour</span>
+                        </div>
+                    </div>
+                    <div class="tutor-actions">
+                        <button class="btn-view-profile" onclick="viewProfile('sarah-johnson')">View Profile</button>
+                        <button class="btn-book-session" onclick="bookSession('sarah-johnson')">Book Session</button>
+                    </div>
+                </div>
+
+                <div class="tutor-card" data-subject="computer-science" data-rating="4.8" data-availability="busy">
+                    <div class="tutor-header">
+                        <div class="tutor-avatar">👨‍💻</div>
+                        <div class="availability-badge busy">Busy Until 3 PM</div>
+                    </div>
+                    <div class="tutor-info">
+                        <h3>Mike Chen</h3>
+                        <p class="tutor-university">Tech University - Graduate Student</p>
+                        <div class="tutor-subjects">
+                            <span class="subject-tag">Computer Science</span>
+                            <span class="subject-tag">Mathematics</span>
+                        </div>
+                        <div class="tutor-rating">
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                            <span class="rating-text">4.8 (31 reviews)</span>
+                        </div>
+                        <p class="tutor-description">Expert in algorithms, data structures, and programming. Great at breaking down complex concepts.</p>
+                        <div class="tutor-stats">
+                            <span class="stat">📚 68+ sessions</span>
+                            <span class="stat">💰 $30/hour</span>
+                        </div>
+                    </div>
+                    <div class="tutor-actions">
+                        <button class="btn-view-profile" onclick="viewProfile('mike-chen')">View Profile</button>
+                        <button class="btn-book-session" onclick="bookSession('mike-chen')">Schedule Later</button>
+                    </div>
+                </div>
+
+                <div class="tutor-card" data-subject="chemistry" data-rating="4.7" data-availability="available">
+                    <div class="tutor-header">
+                        <div class="tutor-avatar">👩‍🔬</div>
+                        <div class="availability-badge online">Available Now</div>
+                    </div>
+                    <div class="tutor-info">
+                        <h3>Emma Davis</h3>
+                        <p class="tutor-university">Medical College - 4th Year</p>
+                        <div class="tutor-subjects">
+                            <span class="subject-tag">Chemistry</span>
+                            <span class="subject-tag">Biology</span>
+                        </div>
+                        <div class="tutor-rating">
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                            <span class="rating-text">4.7 (18 reviews)</span>
+                        </div>
+                        <p class="tutor-description">Strong background in organic chemistry and biochemistry. Excellent at exam preparation.</p>
+                        <div class="tutor-stats">
+                            <span class="stat">📚 32+ sessions</span>
+                            <span class="stat">💰 $28/hour</span>
+                        </div>
+                    </div>
+                    <div class="tutor-actions">
+                        <button class="btn-view-profile" onclick="viewProfile('emma-davis')">View Profile</button>
+                        <button class="btn-book-session" onclick="bookSession('emma-davis')">Book Session</button>
+                    </div>
+                </div>
+
+                <div class="tutor-card" data-subject="physics" data-rating="4.6" data-availability="evening">
+                    <div class="tutor-header">
+                        <div class="tutor-avatar">👨‍🔬</div>
+                        <div class="availability-badge evening">Available 6 PM</div>
+                    </div>
+                    <div class="tutor-info">
+                        <h3>Alex Rodriguez</h3>
+                        <p class="tutor-university">Engineering University - PhD Student</p>
+                        <div class="tutor-subjects">
+                            <span class="subject-tag">Physics</span>
+                            <span class="subject-tag">Mathematics</span>
+                        </div>
+                        <div class="tutor-rating">
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                            <span class="rating-text">4.6 (15 reviews)</span>
+                        </div>
+                        <p class="tutor-description">PhD in theoretical physics. Specializes in quantum mechanics and thermodynamics.</p>
+                        <div class="tutor-stats">
+                            <span class="stat">📚 28+ sessions</span>
+                            <span class="stat">💰 $35/hour</span>
+                        </div>
+                    </div>
+                    <div class="tutor-actions">
+                        <button class="btn-view-profile" onclick="viewProfile('alex-rodriguez')">View Profile</button>
+                        <button class="btn-book-session" onclick="bookSession('alex-rodriguez')">Book Session</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Load More Button -->
+            <div class="load-more-section">
+                <button class="btn-load-more" onclick="loadMoreTutors()">Load More Tutors</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Booking Modal (will be styled later) -->
+    <div id="bookingModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h3>Book Session</h3>
+            <p>Booking functionality will be connected to backend</p>
+            <button onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        function searchTutors() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            // Search functionality will be connected to backend
+            console.log('Searching for:', searchTerm);
+        }
+
+        function filterTutors() {
+            // Filter functionality will be connected to backend
+            console.log('Filtering tutors...');
+        }
+
+        function sortTutors() {
+            // Sort functionality will be connected to backend
+            console.log('Sorting tutors...');
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('subjectFilter').value = '';
+            document.getElementById('availabilityFilter').value = '';
+            document.getElementById('ratingFilter').value = '';
+            document.getElementById('sortFilter').value = 'rating';
+            filterTutors();
+        }
+
+        function viewProfile(tutorId) {
+            alert('Viewing profile for ' + tutorId + '. Profile modal will be implemented.');
+        }
+
+        function bookSession(tutorId) {
+            document.getElementById('bookingModal').style.display = 'block';
+            console.log('Booking session with:', tutorId);
+        }
+
+        function closeModal() {
+            document.getElementById('bookingModal').style.display = 'none';
+        }
+
+        function loadMoreTutors() {
+            // Load more functionality will be connected to backend
+            console.log('Loading more tutors...');
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('userRole');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('bookingModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

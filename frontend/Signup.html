@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - SkillSync</title>
+    <link rel="stylesheet" href="assets/css/signup.css">
+</head>
+<body>
+    <div class="container">
+        <div class="signup-card">
+            <div class="logo">
+                <h1>SkillSync</h1>
+                <p>Join the Peer Tutoring Community</p>
+            </div>
+            
+            <div class="signup-form-container">
+                <h2>Create Your Account</h2>
+                <p class="subtitle">Start your learning journey today</p>
+                
+                <form class="signup-form" id="signupForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" name="firstName" placeholder="Enter first name" required>
+                            <span class="error-message" id="firstNameError"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" name="lastName" placeholder="Enter last name" required>
+                            <span class="error-message" id="lastNameError"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">University Email</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your university email" required>
+                        <span class="error-message" id="emailError"></span>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" placeholder="Create password" required>
+                            <span class="error-message" id="passwordError"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required>
+                            <span class="error-message" id="confirmPasswordError"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="university">University</label>
+                            <input type="text" id="university" name="university" placeholder="Enter university name" required>
+                            <span class="error-message" id="universityError"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="year">Year of Study</label>
+                            <select id="year" name="year" required>
+                                <option value="">Select year</option>
+                                <option value="1">1st Year</option>
+                                <option value="2">2nd Year</option>
+                                <option value="3">3rd Year</option>
+                                <option value="4">4th Year</option>
+                                <option value="graduate">Graduate</option>
+                            </select>
+                            <span class="error-message" id="yearError"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="role-selection">
+                        <label class="section-label">I want to:</label>
+                        <div class="role-options">
+                            <div class="role-option">
+                                <input type="radio" id="learner" name="role" value="learner" required>
+                                <label for="learner" class="role-card">
+                                    <div class="role-icon">🎓</div>
+                                    <div class="role-info">
+                                        <h3>Find a Tutor</h3>
+                                        <p>Get help with subjects and improve grades</p>
+                                    </div>
+                                </label>
+                            </div>
+                            
+                            <div class="role-option">
+                                <input type="radio" id="tutor" name="role" value="tutor" required>
+                                <label for="tutor" class="role-card">
+                                    <div class="role-icon">👨‍🏫</div>
+                                    <div class="role-info">
+                                        <h3>Become a Tutor</h3>
+                                        <p>Share knowledge and help fellow students</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <span class="error-message" id="roleError"></span>
+                    </div>
+                    
+                    <div class="tutor-subjects" id="tutorSubjects" style="display: none;">
+                        <label for="subjects" class="section-label">Subjects you can tutor:</label>
+                        <div class="subjects-grid">
+                            <label class="subject-checkbox">
+                                <input type="checkbox" name="subjects" value="mathematics">
+                                <span class="checkbox-custom"></span>
+                                Mathematics
+                            </label>
+                            <label class="subject-checkbox">
+                                <input type="checkbox" name="subjects" value="physics">
+                                <span class="checkbox-custom"></span>
+                                Physics
+                            </label>
+                            <label class="subject-checkbox">
+                                <input type="checkbox" name="subjects" value="chemistry">
+                                <span class="checkbox-custom"></span>
+                                Chemistry
+                            </label>
+                            <label class="subject-checkbox">
+                                <input type="checkbox" name="subjects" value="computer-science">
+                                <span class="checkbox-custom"></span>
+                                Computer Science
+                            </label>
+                            <label class="subject-checkbox">
+                                <input type="checkbox" name="subjects" value="english">
+                                <span class="checkbox-custom"></span>
+                                English
+                            </label>
+                            <label class="subject-checkbox">
+                                <input type="checkbox" name="subjects" value="biology">
+                                <span class="checkbox-custom"></span>
+                                Biology
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="terms" required>
+                            <span class="checkbox-custom"></span>
+                            I agree to the <a href="#" class="link">Terms of Service</a> and <a href="#" class="link">Privacy Policy</a>
+                        </label>
+                        <span class="error-message" id="termsError"></span>
+                    </div>
+                    
+                    <button type="submit" class="btn-signup">Create Account</button>
+                </form>
+                
+                <div class="login-link">
+                    <p>Already have an account? <a href="login.html">Sign in here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Show/hide tutor subjects based on role selection
+        document.querySelectorAll('input[name="role"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const tutorSubjects = document.getElementById('tutorSubjects');
+                if (this.value === 'tutor') {
+                    tutorSubjects.style.display = 'block';
+                } else {
+                    tutorSubjects.style.display = 'none';
+                }
+            });
+        });
+        
+        // Form submission
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // This will be connected to backend later
+            alert('Signup functionality will be connected to backend');
+            window.location.href = 'login.html';
+        });
+        
+        // Password confirmation validation
+        document.getElementById('confirmPassword').addEventListener('blur', function() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = this.value;
+            const errorElement = document.getElementById('confirmPasswordError');
+            
+            if (password !== confirmPassword && confirmPassword !== '') {
+                errorElement.textContent = 'Passwords do not match';
+            } else {
+                errorElement.textContent = '';
+            }
+        });
+    </script>
+</body>
+</html>
