@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Sessions - SkillSync</title>
     <link rel="stylesheet" href="assets/css/findsession.css">
+    <script src="assets/js/api.js"></script>
 </head>
 <body>
     <!-- Navigation Header -->
@@ -15,8 +16,8 @@
             </div>
             <div class="nav-user">
                 <div class="user-info">
-                    <span class="user-name">John Doe</span>
-                    <span class="user-role">Learner</span>
+                    <span class="user-name" id="userName">Loading...</span>
+                    <span class="user-role" id="userRole">Loading...</span>
                 </div>
                 <div class="nav-actions">
                     <button class="btn-notifications">
@@ -41,7 +42,7 @@
                             <span class="nav-text">Overview</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" id="findTutorsNav">
                         <a href="findtutor.html" class="nav-link">
                             <span class="nav-icon">🔍</span>
                             <span class="nav-text">Find Tutors</span>
@@ -51,6 +52,12 @@
                         <a href="findsession.html" class="nav-link">
                             <span class="nav-icon">📅</span>
                             <span class="nav-text">My Sessions</span>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="tutorDashboardNav" style="display: none;">
+                        <a href="tutor-dashboard.html" class="nav-link">
+                            <span class="nav-icon">👨‍🏫</span>
+                            <span class="nav-text">Tutor Dashboard</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -66,199 +73,63 @@
         <!-- Main Content -->
         <main class="main-content">
             <div class="page-header">
-                <h1>My Sessions</h1>
-                <p>Manage your upcoming and past tutoring sessions</p>
-            </div>
-
-            <!-- Session Stats -->
-            <div class="session-stats">
-                <div class="stat-card">
-                    <div class="stat-icon">📅</div>
-                    <div class="stat-info">
-                        <h3>3</h3>
-                        <p>Upcoming Sessions</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">✅</div>
-                    <div class="stat-info">
-                        <h3>12</h3>
-                        <p>Completed Sessions</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">⭐</div>
-                    <div class="stat-info">
-                        <h3>4.8</h3>
-                        <p>Average Rating Given</p>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🕐</div>
-                    <div class="stat-info">
-                        <h3>24</h3>
-                        <p>Total Hours</p>
-                    </div>
-                </div>
+                <h1 id="pageTitle">My Sessions</h1>
+                <p id="pageSubtitle">Manage your tutoring sessions</p>
             </div>
 
             <!-- Session Tabs -->
-            <div class="sessions-tabs">
-                <button class="tab-btn active" onclick="showTab('upcoming')">
+            <div class="sessions-tabs" id="sessionsTabs">
+                <button class="tab-btn active" onclick="showTab('pending')" id="pendingTab">
+                    <span class="tab-icon">⏳</span>
+                    <span class="tab-text">Pending (<span id="pendingCount">0</span>)</span>
+                </button>
+                <button class="tab-btn" onclick="showTab('upcoming')" id="upcomingTab">
                     <span class="tab-icon">📅</span>
-                    Upcoming (3)
+                    <span class="tab-text">Upcoming (<span id="upcomingCount">0</span>)</span>
                 </button>
-                <button class="tab-btn" onclick="showTab('completed')">
+                <button class="tab-btn" onclick="showTab('completed')" id="completedTab">
                     <span class="tab-icon">✅</span>
-                    Completed (12)
+                    <span class="tab-text">Completed (<span id="completedCount">0</span>)</span>
                 </button>
-                <button class="tab-btn" onclick="showTab('cancelled')">
+                <button class="tab-btn" onclick="showTab('cancelled')" id="cancelledTab">
                     <span class="tab-icon">❌</span>
-                    Cancelled (1)
+                    <span class="tab-text">Cancelled (<span id="cancelledCount">0</span>)</span>
                 </button>
             </div>
 
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-container">
+                <div class="loading-spinner"></div>
+                <p>Loading your sessions...</p>
+            </div>
+
+            <!-- Pending Sessions -->
+            <div id="pending-sessions" class="sessions-content active">
+                <div class="sessions-header">
+                    <h2 id="pendingHeader">Pending Requests</h2>
+                    <div class="header-actions" id="pendingActions">
+                        <button class="btn-book-new" onclick="window.location.href='findtutor.html'" id="bookNewBtn">
+                            <span>➕</span> Book New Session
+                        </button>
+                    </div>
+                </div>
+                <div class="sessions-list" id="pendingList">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+            </div>
+
             <!-- Upcoming Sessions -->
-            <div id="upcoming-sessions" class="sessions-content active">
+            <div id="upcoming-sessions" class="sessions-content">
                 <div class="sessions-header">
                     <h2>Upcoming Sessions</h2>
-                    <button class="btn-book-new" onclick="window.location.href='findtutor.html'">
-                        <span>➕</span> Book New Session
-                    </button>
+                    <div class="header-actions">
+                        <button class="btn-book-new" onclick="window.location.href='findtutor.html'" id="bookNewBtn2">
+                            <span>➕</span> Book New Session
+                        </button>
+                    </div>
                 </div>
-
-                <div class="sessions-list">
-                    <div class="session-card urgent">
-                        <div class="session-time-badge">Tomorrow</div>
-                        <div class="session-main">
-                            <div class="session-header">
-                                <div class="session-subject">Mathematics</div>
-                                <div class="session-status status-confirmed">Confirmed</div>
-                            </div>
-                            <h3>Session with Sarah Johnson</h3>
-                            <div class="session-details">
-                                <div class="detail-item">
-                                    <span class="icon">📅</span>
-                                    <span>Tomorrow, March 15, 2024</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="icon">⏰</span>
-                                    <span>2:00 PM - 3:00 PM</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="icon">📍</span>
-                                    <span>Library Room 201</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="icon">👩‍🎓</span>
-                                    <span>Sarah Johnson - 4.9⭐ (23 reviews)</span>
-                                </div>
-                            </div>
-                            <div class="session-topics">
-                                <span class="topic-tag">Calculus</span>
-                                <span class="topic-tag">Derivatives</span>
-                            </div>
-                        </div>
-                        <div class="session-actions">
-                            <button class="btn-message" onclick="messagesTutor('sarah-johnson')">
-                                <span>💬</span> Message
-                            </button>
-                            <button class="btn-reschedule" onclick="rescheduleSession('session-1')">
-                                <span>📅</span> Reschedule
-                            </button>
-                            <button class="btn-cancel" onclick="cancelSession('session-1')">
-                                <span>❌</span> Cancel
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="session-card">
-                        <div class="session-time-badge">Friday</div>
-                        <div class="session-main">
-                            <div class="session-header">
-                                <div class="session-subject">Physics</div>
-                                <div class="session-status status-pending">Pending</div>
-                            </div>
-                            <h3>Session with Mike Chen</h3>
-                            <div class="session-details">
-                                <div class="detail-item">
-                                    <span class="icon">📅</span>
-                                    <span>Friday, March 17, 2024</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="icon">⏰</span>
-                                    <span>4:00 PM - 5:30 PM</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="icon">📍</span>
-                                    <span>Online (Zoom)</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="icon">👨‍💻</span>
-                                    <span>Mike Chen - 4.8⭐ (31 reviews)</span>
-                                </div>
-                            </div>
-                            <div class="session-topics">
-                                <span class="topic-tag">Quantum Mechanics</span>
-                                <span class="topic-tag">Wave Functions</span>
-                            </div>
-                        </div>
-                        <div class="session-actions">
-                            <button class="btn-message" onclick="messagesTutor('mike-chen')">
-                                <span>💬</span> Message
-                            </button>
-                            <button class="btn-reschedule" onclick="rescheduleSession('session-2')">
-                                <span>📅</span> Reschedule
-                            </button>
-                            <button class="btn-cancel" onclick="cancelSession('session-2')">
-                                <span>❌</span> Cancel
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="session-card">
-                        <div class="session-time-badge">Next Week</div>
-                        <div class="session-main">
-                            <div class="session-header">
-                                <div class="session-subject">Chemistry</div>
-                                <div class="session-status status-confirmed">Confirmed</div>
-                            </div>
-                            <h3>Session with Emma Davis</h3>
-                            <div class="session-details">
-                                <div class="detail-item">
-                                    <span class="icon">📅</span>
-                                    <span>Monday, March 20, 2024</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="icon">⏰</span>
-                                    <span>3:00 PM - 5:00 PM</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="icon">📍</span>
-                                    <span>Science Building Lab 3</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="icon">👩‍🔬</span>
-                                    <span>Emma Davis - 4.7⭐ (18 reviews)</span>
-                                </div>
-                            </div>
-                            <div class="session-topics">
-                                <span class="topic-tag">Organic Chemistry</span>
-                                <span class="topic-tag">Exam Prep</span>
-                            </div>
-                        </div>
-                        <div class="session-actions">
-                            <button class="btn-message" onclick="messagesTutor('emma-davis')">
-                                <span>💬</span> Message
-                            </button>
-                            <button class="btn-reschedule" onclick="rescheduleSession('session-3')">
-                                <span>📅</span> Reschedule
-                            </button>
-                            <button class="btn-cancel" onclick="cancelSession('session-3')">
-                                <span>❌</span> Cancel
-                            </button>
-                        </div>
-                    </div>
+                <div class="sessions-list" id="upcomingList">
+                    <!-- Dynamic content will be loaded here -->
                 </div>
             </div>
 
@@ -266,94 +137,9 @@
             <div id="completed-sessions" class="sessions-content">
                 <div class="sessions-header">
                     <h2>Completed Sessions</h2>
-                    <div class="filter-options">
-                        <select id="monthFilter" onchange="filterCompleted()">
-                            <option value="">All Time</option>
-                            <option value="march">March 2024</option>
-                            <option value="february">February 2024</option>
-                            <option value="january">January 2024</option>
-                        </select>
-                    </div>
                 </div>
-
-                <div class="sessions-list">
-                    <div class="session-card completed">
-                        <div class="session-time-badge past">Last Week</div>
-                        <div class="session-main">
-                            <div class="session-header">
-                                <div class="session-subject">Chemistry</div>
-                                <div class="session-rating">
-                                    <span>Your Rating:</span>
-                                    <div class="stars">⭐⭐⭐⭐⭐</div>
-                                </div>
-                            </div>
-                            <h3>Session with Emma Davis</h3>
-                            <div class="session-details">
-                                <div class="detail-item">
-                                    <span class="icon">📅</span>
-                                    <span>Monday, March 6, 2024</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="icon">⏰</span>
-                                    <span>3:00 PM - 5:00 PM (2 hours)</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="icon">💰</span>
-                                    <span>$56.00 total</span>
-                                </div>
-                            </div>
-                            <div class="session-notes">
-                                <p><strong>Your notes:</strong> Great session! Emma explained organic chemistry concepts clearly. Finally understand reaction mechanisms.</p>
-                            </div>
-                        </div>
-                        <div class="session-actions">
-                            <button class="btn-book-again" onclick="bookAgain('emma-davis')">
-                                <span>🔄</span> Book Again
-                            </button>
-                            <button class="btn-view-details" onclick="viewSessionDetails('session-completed-1')">
-                                <span>📋</span> Details
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="session-card completed">
-                        <div class="session-time-badge past">2 Weeks Ago</div>
-                        <div class="session-main">
-                            <div class="session-header">
-                                <div class="session-subject">Mathematics</div>
-                                <div class="session-rating">
-                                    <span>Your Rating:</span>
-                                    <div class="stars">⭐⭐⭐⭐⭐</div>
-                                </div>
-                            </div>
-                            <h3>Session with Sarah Johnson</h3>
-                            <div class="session-details">
-                                <div class="detail-item">
-                                    <span class="icon">📅</span>
-                                    <span>Friday, February 25, 2024</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="icon">⏰</span>
-                                    <span>2:00 PM - 3:00 PM (1 hour)</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="icon">💰</span>
-                                    <span>$25.00 total</span>
-                                </div>
-                            </div>
-                            <div class="session-notes">
-                                <p><strong>Your notes:</strong> Excellent help with calculus derivatives. Sarah is very patient and explains step-by-step.</p>
-                            </div>
-                        </div>
-                        <div class="session-actions">
-                            <button class="btn-book-again" onclick="bookAgain('sarah-johnson')">
-                                <span>🔄</span> Book Again
-                            </button>
-                            <button class="btn-view-details" onclick="viewSessionDetails('session-completed-2')">
-                                <span>📋</span> Details
-                            </button>
-                        </div>
-                    </div>
+                <div class="sessions-list" id="completedList">
+                    <!-- Dynamic content will be loaded here -->
                 </div>
             </div>
 
@@ -362,88 +148,459 @@
                 <div class="sessions-header">
                     <h2>Cancelled Sessions</h2>
                 </div>
+                <div class="sessions-list" id="cancelledList">
+                    <!-- Dynamic content will be loaded here -->
+                </div>
+            </div>
 
-                <div class="sessions-list">
-                    <div class="session-card cancelled">
-                        <div class="session-time-badge cancelled-badge">Cancelled</div>
-                        <div class="session-main">
-                            <div class="session-header">
-                                <div class="session-subject">Physics</div>
-                                <div class="cancellation-reason">Cancelled by tutor</div>
-                            </div>
-                            <h3>Session with Alex Rodriguez</h3>
-                            <div class="session-details">
-                                <div class="detail-item">
-                                    <span class="icon">📅</span>
-                                    <span>Was scheduled for March 10, 2024</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="icon">⏰</span>
-                                    <span>6:00 PM - 7:30 PM</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="icon">💰</span>
-                                    <span>Full refund processed</span>
-                                </div>
-                            </div>
-                            <div class="cancellation-note">
-                                <p><strong>Reason:</strong> Tutor had an emergency. Session was cancelled 2 hours before scheduled time.</p>
-                            </div>
-                        </div>
-                        <div class="session-actions">
-                            <button class="btn-book-again" onclick="bookAgain('alex-rodriguez')">
-                                <span>🔄</span> Book Again
-                            </button>
-                        </div>
-                    </div>
+            <!-- No Results Message -->
+            <div id="noResults" class="no-results" style="display: none;">
+                <div class="no-results-content">
+                    <h3>No sessions found</h3>
+                    <p id="noResultsText">You don't have any sessions yet.</p>
+                    <button class="btn-book-new" onclick="window.location.href='findtutor.html'">
+                        <span>➕</span> Book Your First Session
+                    </button>
                 </div>
             </div>
         </main>
     </div>
 
+    <style>
+        /* Loading styles */
+        .loading-container {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 80px 20px;
+            color: #666;
+        }
+
+        .no-results h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        /* Session card styles for accept/reject buttons */
+        .booking-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .btn-accept {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-accept:hover {
+            background: #218838;
+        }
+
+        .btn-reject {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-reject:hover {
+            background: #c82333;
+        }
+
+        .btn-cancel {
+            background: #ffc107;
+            color: #212529;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-cancel:hover {
+            background: #e0a800;
+        }
+
+        .session-message {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border-left: 4px solid #007bff;
+        }
+
+        .session-message strong {
+            color: #333;
+        }
+
+        .tutor-perspective .btn-book-new {
+            display: none;
+        }
+    </style>
+
     <script>
-        function showTab(tab) {
-            // Remove active class from all tabs and content
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.sessions-content').forEach(content => content.classList.remove('active'));
-            
-            // Add active class to clicked tab and corresponding content
-            event.target.classList.add('active');
-            document.getElementById(tab + '-sessions').classList.add('active');
-        }
+        // Global variables
+        let currentUser = null;
+        let allBookings = [];
+        let currentTab = 'pending';
 
-        function messagesTutor(tutorId) {
-            alert('Messaging feature will be implemented. Opening chat with ' + tutorId);
-        }
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Check authentication
+            if (!auth.requireAuth()) {
+                return;
+            }
 
-        function rescheduleSession(sessionId) {
-            alert('Reschedule feature will be implemented for ' + sessionId);
-        }
+            await initializePage();
+        });
 
-        function cancelSession(sessionId) {
-            if (confirm('Are you sure you want to cancel this session? Cancellation fees may apply.')) {
-                alert('Cancellation feature will be implemented for ' + sessionId);
+        async function initializePage() {
+            try {
+                showLoadingState();
+
+                // Load user info
+                currentUser = api.getUser();
+                if (currentUser) {
+                    document.getElementById('userName').textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+                    document.getElementById('userRole').textContent = currentUser.role === 'tutor' ? 'Tutor' : 'Learner';
+
+                    // Update UI based on role
+                    updateUIForRole();
+                }
+
+                // Load bookings
+                await loadBookings();
+
+            } catch (error) {
+                console.error('Error initializing page:', error);
+                showError('Failed to load sessions. Please refresh the page.');
             }
         }
 
-        function bookAgain(tutorId) {
-            alert('Redirecting to book another session with ' + tutorId);
-            // Will redirect to booking flow
+        function updateUIForRole() {
+            if (currentUser.role === 'tutor') {
+                document.getElementById('pageTitle').textContent = 'My Teaching Sessions';
+                document.getElementById('pageSubtitle').textContent = 'Manage your tutoring requests and sessions';
+                document.getElementById('pendingHeader').textContent = 'Booking Requests';
+                document.getElementById('noResultsText').textContent = 'No booking requests yet. Students will find you through the Find Tutors page.';
+
+                // Hide "Book New Session" buttons for tutors
+                document.querySelectorAll('.btn-book-new').forEach(btn => btn.style.display = 'none');
+
+                // Show tutor navigation if exists
+                const tutorNav = document.getElementById('tutorDashboardNav');
+                if (tutorNav) {
+                    tutorNav.style.display = 'block';
+                }
+
+                document.body.classList.add('tutor-perspective');
+            } else {
+                document.getElementById('pendingHeader').textContent = 'Pending Requests';
+                document.getElementById('noResultsText').textContent = 'You haven\'t booked any sessions yet.';
+            }
         }
 
-        function viewSessionDetails(sessionId) {
-            alert('Session details modal will be implemented for ' + sessionId);
+        async function loadBookings() {
+            try {
+                const response = await api.getBookings();
+                allBookings = response.data || [];
+
+                // Group bookings by status
+                const pending = allBookings.filter(b => b.status === 'pending');
+                const upcoming = allBookings.filter(b => b.status === 'accepted');
+                const completed = allBookings.filter(b => b.status === 'completed');
+                const cancelled = allBookings.filter(b => b.status === 'cancelled' || b.status === 'rejected');
+
+                // Update tab counts
+                document.getElementById('pendingCount').textContent = pending.length;
+                document.getElementById('upcomingCount').textContent = upcoming.length;
+                document.getElementById('completedCount').textContent = completed.length;
+                document.getElementById('cancelledCount').textContent = cancelled.length;
+
+                // Display current tab
+                displayBookings(currentTab);
+                hideLoadingState();
+
+            } catch (error) {
+                console.error('Error loading bookings:', error);
+                hideLoadingState();
+                showError('Failed to load sessions. Please try again.');
+            }
         }
 
-        function filterCompleted() {
-            const month = document.getElementById('monthFilter').value;
-            alert('Filter by month: ' + month + '. Backend integration needed.');
+        function displayBookings(status) {
+            let bookings;
+            let listId;
+
+            switch (status) {
+                case 'pending':
+                    bookings = allBookings.filter(b => b.status === 'pending');
+                    listId = 'pendingList';
+                    break;
+                case 'upcoming':
+                    bookings = allBookings.filter(b => b.status === 'accepted');
+                    listId = 'upcomingList';
+                    break;
+                case 'completed':
+                    bookings = allBookings.filter(b => b.status === 'completed');
+                    listId = 'completedList';
+                    break;
+                case 'cancelled':
+                    bookings = allBookings.filter(b => b.status === 'cancelled' || b.status === 'rejected');
+                    listId = 'cancelledList';
+                    break;
+                default:
+                    bookings = [];
+                    listId = 'pendingList';
+            }
+
+            const list = document.getElementById(listId);
+            const noResults = document.getElementById('noResults');
+
+            if (bookings.length === 0) {
+                list.style.display = 'none';
+                noResults.style.display = 'block';
+                return;
+            }
+
+            list.style.display = 'block';
+            noResults.style.display = 'none';
+
+            list.innerHTML = bookings.map(booking => createBookingCard(booking)).join('');
         }
 
-        function logout() {
+        function createBookingCard(booking) {
+            const isUserTutor = currentUser.role === 'tutor';
+            const otherPerson = isUserTutor ? booking.learner : booking.tutor;
+            const date = new Date(booking.date);
+            const formattedDate = date.toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            const statusClass = booking.status === 'pending' ? 'status-pending' :
+                              booking.status === 'accepted' ? 'status-confirmed' :
+                              booking.status === 'completed' ? 'status-completed' :
+                              'status-cancelled';
+
+            const timeFromNow = getTimeFromNow(date);
+
+            return `
+                <div class="session-card ${booking.status}">
+                    <div class="session-time-badge ${booking.status === 'cancelled' || booking.status === 'rejected' ? 'cancelled-badge' : ''}">${timeFromNow}</div>
+                    <div class="session-main">
+                        <div class="session-header">
+                            <div class="session-subject">${formatSubject(booking.subject)}</div>
+                            <div class="session-status ${statusClass}">${booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}</div>
+                        </div>
+                        <h3>Session with ${otherPerson.firstName} ${otherPerson.lastName}</h3>
+                        <div class="session-details">
+                            <div class="detail-item">
+                                <span class="icon">📅</span>
+                                <span>${formattedDate}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="icon">⏰</span>
+                                <span>${booking.timeSlot} (${booking.duration} minutes)</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="icon">📍</span>
+                                <span>${booking.location}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="icon">${isUserTutor ? '👨‍🎓' : '👨‍🏫'}</span>
+                                <span>${otherPerson.firstName} ${otherPerson.lastName} - ${otherPerson.university}</span>
+                            </div>
+                        </div>
+                        ${booking.message ? `
+                            <div class="session-message">
+                                <strong>Message:</strong> ${booking.message}
+                            </div>
+                        ` : ''}
+                        ${createActionButtons(booking)}
+                    </div>
+                </div>
+            `;
+        }
+
+        function createActionButtons(booking) {
+            const isUserTutor = currentUser.role === 'tutor';
+
+            if (booking.status === 'pending' && isUserTutor) {
+                // Tutor can accept or reject pending bookings
+                return `
+                    <div class="booking-actions">
+                        <button class="btn-accept" onclick="updateBookingStatus('${booking._id}', 'accepted')">
+                            <span>✅</span> Accept
+                        </button>
+                        <button class="btn-reject" onclick="updateBookingStatus('${booking._id}', 'rejected')">
+                            <span>❌</span> Reject
+                        </button>
+                    </div>
+                `;
+            } else if (booking.status === 'accepted') {
+                // Both can cancel, tutor can complete
+                let buttons = `
+                    <div class="session-actions">
+                        <button class="btn-cancel" onclick="updateBookingStatus('${booking._id}', 'cancelled')">
+                            <span>❌</span> Cancel
+                        </button>
+                `;
+
+                if (isUserTutor) {
+                    buttons += `
+                        <button class="btn-accept" onclick="updateBookingStatus('${booking._id}', 'completed')">
+                            <span>✅</span> Mark Complete
+                        </button>
+                    `;
+                }
+
+                buttons += '</div>';
+                return buttons;
+            } else if (booking.status === 'pending' && !isUserTutor) {
+                // Learner can cancel pending requests
+                return `
+                    <div class="session-actions">
+                        <button class="btn-cancel" onclick="updateBookingStatus('${booking._id}', 'cancelled')">
+                            <span>❌</span> Cancel Request
+                        </button>
+                    </div>
+                `;
+            }
+
+            return '';
+        }
+
+        async function updateBookingStatus(bookingId, status) {
+            const confirmMessages = {
+                'accepted': 'Accept this booking request?',
+                'rejected': 'Reject this booking request?',
+                'cancelled': 'Cancel this session?',
+                'completed': 'Mark this session as completed?'
+            };
+
+            if (!confirm(confirmMessages[status])) {
+                return;
+            }
+
+            try {
+                const response = await api.updateBookingStatus(bookingId, status);
+
+                if (response.success) {
+                    showSuccess(`Session ${status} successfully!`);
+                    await loadBookings(); // Reload to update the display
+                } else {
+                    throw new Error(response.message);
+                }
+            } catch (error) {
+                console.error('Error updating booking status:', error);
+                showError(error.message || 'Failed to update session status. Please try again.');
+            }
+        }
+
+        function formatSubject(subject) {
+            return subject.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        function getTimeFromNow(date) {
+            const now = new Date();
+            const diffDays = Math.ceil((date - now) / (1000 * 60 * 60 * 24));
+
+            if (diffDays < 0) {
+                return Math.abs(diffDays) === 1 ? 'Yesterday' : `${Math.abs(diffDays)} days ago`;
+            } else if (diffDays === 0) {
+                return 'Today';
+            } else if (diffDays === 1) {
+                return 'Tomorrow';
+            } else if (diffDays <= 7) {
+                return `In ${diffDays} days`;
+            } else {
+                return 'Next week';
+            }
+        }
+
+        function showTab(tab) {
+            currentTab = tab;
+
+            // Remove active class from all tabs and content
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.sessions-content').forEach(content => content.classList.remove('active'));
+
+            // Add active class to clicked tab and corresponding content
+            document.getElementById(tab + 'Tab').classList.add('active');
+            document.getElementById(tab + '-sessions').classList.add('active');
+
+            // Display bookings for this tab
+            displayBookings(tab);
+        }
+
+        function showLoadingState() {
+            document.getElementById('loadingState').style.display = 'block';
+            document.querySelectorAll('.sessions-content').forEach(content => content.style.display = 'none');
+            document.getElementById('noResults').style.display = 'none';
+        }
+
+        function hideLoadingState() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.querySelectorAll('.sessions-content').forEach(content => content.style.display = 'none');
+            document.getElementById(currentTab + '-sessions').style.display = 'block';
+        }
+
+        function showError(message) {
+            alert('❌ ' + message);
+        }
+
+        function showSuccess(message) {
+            alert('✅ ' + message);
+        }
+
+        async function logout() {
             if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('userRole');
-                window.location.href = 'login.html';
+                await auth.logout();
             }
         }
     </script>

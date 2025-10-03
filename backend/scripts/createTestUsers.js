@@ -22,14 +22,15 @@ const createTestUsers = async () => {
     await User.deleteMany({});
     console.log('🗑️  Cleared existing users');
 
-    // Create test users
+    // Create test users - all at Deakin University
     const testUsers = [
       {
         firstName: 'Demo',
         lastName: 'Learner',
         email: 'learner@university.edu',
         password: await bcrypt.hash('password123', 12),
-        university: 'University of Example',
+        university: 'Deakin University',
+        school: 'School of Business',
         year: '2',
         role: 'learner',
         subjects: []
@@ -39,7 +40,8 @@ const createTestUsers = async () => {
         lastName: 'Tutor',
         email: 'tutor@university.edu',
         password: await bcrypt.hash('password123', 12),
-        university: 'University of Example',
+        university: 'Deakin University',
+        school: 'School of Information Technology',
         year: '4',
         role: 'tutor',
         subjects: ['mathematics', 'physics', 'computer-science']
@@ -49,7 +51,8 @@ const createTestUsers = async () => {
         lastName: 'Doe',
         email: 'john.doe@university.edu',
         password: await bcrypt.hash('password123', 12),
-        university: 'State University',
+        university: 'Deakin University',
+        school: 'School of Engineering',
         year: '3',
         role: 'learner',
         subjects: []
@@ -59,7 +62,8 @@ const createTestUsers = async () => {
         lastName: 'Smith',
         email: 'jane.smith@university.edu',
         password: await bcrypt.hash('password123', 12),
-        university: 'Tech University',
+        university: 'Deakin University',
+        school: 'School of Life and Environmental Sciences',
         year: 'graduate',
         role: 'tutor',
         subjects: ['chemistry', 'biology', 'english']

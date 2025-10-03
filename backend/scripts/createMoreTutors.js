@@ -18,14 +18,15 @@ const createMoreTutors = async () => {
   try {
     await connectDB();
 
-    // Create additional tutors for testing
+    // Create additional tutors for testing - all at Deakin University
     const additionalTutors = [
       {
         firstName: 'Sarah',
         lastName: 'Johnson',
         email: 'sarah.johnson@university.edu',
         password: await bcrypt.hash('password123', 12),
-        university: 'State University',
+        university: 'Deakin University',
+        school: 'School of Engineering',
         year: '3',
         role: 'tutor',
         subjects: ['mathematics', 'physics']
@@ -35,7 +36,8 @@ const createMoreTutors = async () => {
         lastName: 'Chen',
         email: 'mike.chen@university.edu',
         password: await bcrypt.hash('password123', 12),
-        university: 'Tech University',
+        university: 'Deakin University',
+        school: 'School of Information Technology',
         year: 'graduate',
         role: 'tutor',
         subjects: ['computer-science', 'mathematics']
@@ -45,7 +47,8 @@ const createMoreTutors = async () => {
         lastName: 'Davis',
         email: 'emma.davis@university.edu',
         password: await bcrypt.hash('password123', 12),
-        university: 'Medical College',
+        university: 'Deakin University',
+        school: 'School of Life and Environmental Sciences',
         year: '4',
         role: 'tutor',
         subjects: ['chemistry', 'biology']
@@ -55,7 +58,8 @@ const createMoreTutors = async () => {
         lastName: 'Rodriguez',
         email: 'alex.rodriguez@university.edu',
         password: await bcrypt.hash('password123', 12),
-        university: 'Literature University',
+        university: 'Deakin University',
+        school: 'School of Communication and Creative Arts',
         year: '2',
         role: 'tutor',
         subjects: ['english', 'literature']
@@ -65,7 +69,8 @@ const createMoreTutors = async () => {
         lastName: 'Wang',
         email: 'lisa.wang@university.edu',
         password: await bcrypt.hash('password123', 12),
-        university: 'Engineering Institute',
+        university: 'Deakin University',
+        school: 'School of Engineering',
         year: 'graduate',
         role: 'tutor',
         subjects: ['physics', 'mathematics', 'computer-science']
@@ -75,7 +80,8 @@ const createMoreTutors = async () => {
         lastName: 'Brown',
         email: 'david.brown@university.edu',
         password: await bcrypt.hash('password123', 12),
-        university: 'Business School',
+        university: 'Deakin University',
+        school: 'Deakin Business School',
         year: '3',
         role: 'tutor',
         subjects: ['economics', 'mathematics']
@@ -85,7 +91,8 @@ const createMoreTutors = async () => {
         lastName: 'Garcia',
         email: 'maria.garcia@university.edu',
         password: await bcrypt.hash('password123', 12),
-        university: 'Science University',
+        university: 'Deakin University',
+        school: 'School of Life and Environmental Sciences',
         year: '4',
         role: 'tutor',
         subjects: ['chemistry', 'biology', 'physics']
@@ -95,7 +102,8 @@ const createMoreTutors = async () => {
         lastName: 'Smith',
         email: 'john.smith@university.edu',
         password: await bcrypt.hash('password123', 12),
-        university: 'Community College',
+        university: 'Deakin University',
+        school: 'School of Communication and Creative Arts',
         year: '1',
         role: 'tutor',
         subjects: ['english', 'mathematics']

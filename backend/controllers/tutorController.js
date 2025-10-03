@@ -51,8 +51,7 @@ const getTutors = async (req, res) => {
       const averageRating = totalSessions > 0 ?
         (4.0 + Math.random() * 1.0).toFixed(1) : '0.0'; // Mock rating for now
 
-      // Calculate hourly rate (mock for now)
-      const hourlyRate = 20 + Math.floor(Math.random() * 20); // $20-40/hour
+      // No pricing needed for free tutoring platform
 
       // Determine availability status (mock for now)
       const isAvailable = Math.random() > 0.3; // 70% chance of being available
@@ -62,7 +61,6 @@ const getTutors = async (req, res) => {
         stats: {
           totalSessions,
           averageRating: parseFloat(averageRating),
-          hourlyRate,
           reviewCount: totalSessions,
           isAvailable,
           availabilityText: isAvailable ? 'Available Now' : 'Busy Until Later'
@@ -92,8 +90,8 @@ const getTutors = async (req, res) => {
       case 'availability':
         filteredTutors.sort((a, b) => b.stats.isAvailable - a.stats.isAvailable);
         break;
-      case 'price':
-        filteredTutors.sort((a, b) => a.stats.hourlyRate - b.stats.hourlyRate);
+      case 'experience':
+        filteredTutors.sort((a, b) => b.stats.totalSessions - a.stats.totalSessions);
         break;
       default:
         filteredTutors.sort((a, b) => b.stats.averageRating - a.stats.averageRating);
@@ -139,7 +137,6 @@ const getTutorById = async (req, res) => {
     const totalSessions = completedSessions.length;
     const averageRating = totalSessions > 0 ?
       (4.0 + Math.random() * 1.0).toFixed(1) : '0.0';
-    const hourlyRate = 20 + Math.floor(Math.random() * 20);
     const isAvailable = Math.random() > 0.3;
 
     // Get recent reviews (mock data for now)
@@ -160,7 +157,6 @@ const getTutorById = async (req, res) => {
       stats: {
         totalSessions,
         averageRating: parseFloat(averageRating),
-        hourlyRate,
         reviewCount: totalSessions,
         uniqueStudents: uniqueStudents.length,
         isAvailable,

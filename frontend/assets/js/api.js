@@ -119,15 +119,25 @@ class APIService {
         });
     }
 
-    async getUserBookings() {
-        return await this.makeRequest('/api/bookings/user');
+    async getBookings(params = {}) {
+        const queryString = new URLSearchParams(params).toString();
+        const endpoint = queryString ? `/api/bookings?${queryString}` : '/api/bookings';
+        return await this.makeRequest(endpoint);
     }
 
-    async updateBookingStatus(bookingId, status) {
+    async getBookingById(bookingId) {
+        return await this.makeRequest(`/api/bookings/${bookingId}`);
+    }
+
+    async updateBookingStatus(bookingId, status, message = '') {
         return await this.makeRequest(`/api/bookings/${bookingId}`, {
             method: 'PUT',
-            body: JSON.stringify({ status })
+            body: JSON.stringify({ status, message })
         });
+    }
+
+    async getTutorAvailability(tutorId, date) {
+        return await this.makeRequest(`/api/bookings/availability?tutorId=${tutorId}&date=${date}`);
     }
 
     // Utility methods
